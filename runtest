@@ -1,0 +1,19 @@
+#!/bin/bash
+
+TESTS=(math text)
+
+if [ $# -ne 1 ]; then
+    echo "Usage ./runtest TEST_NAME"
+    echo "available tests:"
+    for t in ${TESTS[@]}; do
+        echo "    - $t"
+    done
+    exit 1
+fi
+
+TEST=$1
+TEST_BIN="test_${1}"
+
+make -j16 $TEST_BIN
+./${TEST_BIN}
+rm -rf ./${TEST_BIN}

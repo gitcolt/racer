@@ -1,0 +1,219 @@
+[
+  {
+    "arguments": [
+      "/usr/bin/cc",
+      "-c",
+      "-I./raylib-5.0/src",
+      "-I./cLDtk",
+      "-g",
+      "-fPIC",
+      "cLDtk/libcLDtk.a",
+      "-o",
+      "libmodule.so",
+      "module.c"
+    ],
+    "directory": "/home/colt/projects/racing",
+    "file": "/home/colt/projects/racing/module.c",
+    "output": "/home/colt/projects/racing/libmodule.so"
+  },
+  {
+    "arguments": [
+      "/usr/bin/cc",
+      "-c",
+      "-I./raylib-5.0/src",
+      "-I./cLDtk",
+      "-g",
+      "-fPIC",
+      "cLDtk/libcLDtk.a",
+      "-o",
+      "libmodule.so",
+      "track_editor.c"
+    ],
+    "directory": "/home/colt/projects/racing",
+    "file": "/home/colt/projects/racing/track_editor.c",
+    "output": "/home/colt/projects/racing/libmodule.so"
+  },
+  {
+    "arguments": [
+      "/usr/bin/cc",
+      "-c",
+      "-I./raylib-5.0/src",
+      "-I./cLDtk",
+      "-g",
+      "-fPIC",
+      "cLDtk/libcLDtk.a",
+      "-o",
+      "libmodule.so",
+      "mymath.c"
+    ],
+    "directory": "/home/colt/projects/racing",
+    "file": "/home/colt/projects/racing/mymath.c",
+    "output": "/home/colt/projects/racing/libmodule.so"
+  },
+  {
+    "arguments": [
+      "/usr/bin/cc",
+      "-c",
+      "-I./raylib-5.0/src",
+      "-I./cLDtk",
+      "-g",
+      "-fPIC",
+      "cLDtk/libcLDtk.a",
+      "-o",
+      "libmodule.so",
+      "debug.c"
+    ],
+    "directory": "/home/colt/projects/racing",
+    "file": "/home/colt/projects/racing/debug.c",
+    "output": "/home/colt/projects/racing/libmodule.so"
+  },
+  {
+    "arguments": [
+      "/usr/bin/cc",
+      "-c",
+      "-I./raylib-5.0/src",
+      "-I./cLDtk",
+      "-g",
+      "-fPIC",
+      "cLDtk/libcLDtk.a",
+      "-o",
+      "libmodule.so",
+      "animator.c"
+    ],
+    "directory": "/home/colt/projects/racing",
+    "file": "/home/colt/projects/racing/animator.c",
+    "output": "/home/colt/projects/racing/libmodule.so"
+  },
+  {
+    "arguments": [
+      "/usr/bin/cc",
+      "-c",
+      "-I./raylib-5.0/src",
+      "-I./cLDtk",
+      "-g",
+      "-fPIC",
+      "cLDtk/libcLDtk.a",
+      "-o",
+      "libmodule.so",
+      "kart.c"
+    ],
+    "directory": "/home/colt/projects/racing",
+    "file": "/home/colt/projects/racing/kart.c",
+    "output": "/home/colt/projects/racing/libmodule.so"
+  },
+  {
+    "arguments": [
+      "/usr/bin/cc",
+      "-c",
+      "-I./raylib-5.0/src",
+      "-I./cLDtk",
+      "-g",
+      "-fPIC",
+      "cLDtk/libcLDtk.a",
+      "-o",
+      "libmodule.so",
+      "spritesheet.c"
+    ],
+    "directory": "/home/colt/projects/racing",
+    "file": "/home/colt/projects/racing/spritesheet.c",
+    "output": "/home/colt/projects/racing/libmodule.so"
+  },
+  {
+    "arguments": [
+      "/usr/bin/cc",
+      "-c",
+      "-I./raylib-5.0/src",
+      "-I./cLDtk",
+      "-g",
+      "-fPIC",
+      "cLDtk/libcLDtk.a",
+      "-o",
+      "libmodule.so",
+      "overworld.c"
+    ],
+    "directory": "/home/colt/projects/racing",
+    "file": "/home/colt/projects/racing/overworld.c",
+    "output": "/home/colt/projects/racing/libmodule.so"
+  },
+  {
+    "arguments": [
+      "/usr/bin/cc",
+      "-c",
+      "-I./raylib-5.0/src",
+      "-I./cLDtk",
+      "-g",
+      "-fPIC",
+      "cLDtk/libcLDtk.a",
+      "-o",
+      "libmodule.so",
+      "tiles.c"
+    ],
+    "directory": "/home/colt/projects/racing",
+    "file": "/home/colt/projects/racing/tiles.c",
+    "output": "/home/colt/projects/racing/libmodule.so"
+  },
+  {
+    "arguments": [
+      "/usr/bin/cc",
+      "-c",
+      "-I./raylib-5.0/src",
+      "-I./cLDtk",
+      "-g",
+      "./raylib-5.0/src/libraylib.a",
+      "-o",
+      "main",
+      "main.c"
+    ],
+    "directory": "/home/colt/projects/racing",
+    "file": "/home/colt/projects/racing/main.c",
+    "output": "/home/colt/projects/racing/main"
+  },
+  {
+    "arguments": [
+      "/usr/bin/cc",
+      "-c",
+      "-I./raylib-5.0/src",
+      "-I./cLDtk",
+      "-g",
+      "./raylib-5.0/src/libraylib.a",
+      "-o",
+      "main",
+      "track_editor.c"
+    ],
+    "directory": "/home/colt/projects/racing",
+    "file": "/home/colt/projects/racing/track_editor.c",
+    "output": "/home/colt/projects/racing/main"
+  },
+  {
+    "arguments": [
+      "/usr/bin/cc",
+      "-c",
+      "-I./raylib-5.0/src",
+      "-I./cLDtk",
+      "-g",
+      "./raylib-5.0/src/libraylib.a",
+      "-o",
+      "main",
+      "mymath.c"
+    ],
+    "directory": "/home/colt/projects/racing",
+    "file": "/home/colt/projects/racing/mymath.c",
+    "output": "/home/colt/projects/racing/main"
+  },
+  {
+    "arguments": [
+      "/usr/bin/cc",
+      "-c",
+      "-I./raylib-5.0/src",
+      "-I./cLDtk",
+      "-g",
+      "./raylib-5.0/src/libraylib.a",
+      "-o",
+      "main",
+      "debug.c"
+    ],
+    "directory": "/home/colt/projects/racing",
+    "file": "/home/colt/projects/racing/debug.c",
+    "output": "/home/colt/projects/racing/main"
+  }
+]
