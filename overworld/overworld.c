@@ -1,10 +1,10 @@
 #include "overworld.h"
+#include "layer_names.h"
 #include "../tiles.h"
 #include "../dialog.h"
 #include "../dialog_text.h"
 #include "../collision.h"
 #include "../dyn_arr.h"
-#include "../layer_names.h"
 
 #include <stdio.h>
 
