@@ -1,7 +1,7 @@
 #include "npc.h"
-#include "dyn_arr.h"
-#include "mymath.h"
-#include "tiles.h"
+#include "../dyn_arr.h"
+#include "../mymath.h"
+#include "../tiles.h"
 
 #include <malloc.h>
 #include <string.h>

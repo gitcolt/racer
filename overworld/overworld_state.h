@@ -2,10 +2,10 @@
 #define OVERWORLD_STATE_H
 
 #include "overworld_player.h"
+#include "npc.h"
 #include "../spritesheet.h"
 #include "../tiles.h"
 #include "../collision.h"
-#include "../npc.h"
 
 typedef struct {
     V2 mouse_pos;
