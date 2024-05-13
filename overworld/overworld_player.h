@@ -3,8 +3,8 @@
 
 #include "../shared.h"
 #include "../spritesheet.h"
-#include "../animator.h"
 #include "../collision.h"
+#include "../animation/animator.h"
 
 #define PLAYER_COLLISION_RADIUS 10
 

@@ -1,7 +1,7 @@
 #ifndef ANIMATOR_H
 #define ANIMATOR_H
 
-#include "spritesheet.h"
+#include "../spritesheet.h"
 
 #define INITIAL_ANIM_SPEC_CAP 5
 

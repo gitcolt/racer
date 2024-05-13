@@ -2,8 +2,8 @@
 #define NPC_H
 
 #include "spritesheet.h"
-#include "animator.h"
 #include "collision.h"
+#include "animation/animator.h"
 
 #define NPC_COLLISION_RADIUS 20
 

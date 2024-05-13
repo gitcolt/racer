@@ -1,7 +1,6 @@
 #include "animator.h"
-#include "spritesheet.h"
-#include "dyn_arr.h"
-#include "debug.h"
+#include "../dyn_arr.h"
+#include "../debug.h"
 
 #include <stdio.h>
 

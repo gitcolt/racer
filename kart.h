@@ -1,8 +1,8 @@
 #ifndef KART_H
 #define KART_H
 
-#include "animator.h"
 #include "shared.h"
+#include "animation/animator.h"
 
 typedef struct {
     Animator animator;

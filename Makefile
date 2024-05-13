@@ -6,8 +6,10 @@ LIBS = -lm
 
 MODULE_SRCS = module.c \
 			  track_editor.c \
-			  mymath.c debug.c \
-			  animator.c kart.c spritesheet.c \
+			  mymath.c \
+			  debug.c \
+			  kart.c \
+			  spritesheet.c \
 			  tiles.c \
 			  $(LIBCLDTK) \
 			  dialog.c \
@@ -15,6 +17,7 @@ MODULE_SRCS = module.c \
 			  shared.c \
 			  npc.c \
 			  collision.c \
+			  animation/animator.c \
 			  overworld/overworld.c \
 			  overworld/overworld_player.c
 
