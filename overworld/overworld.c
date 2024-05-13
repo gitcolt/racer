@@ -127,9 +127,15 @@ void overworld_process_input(OverworldState *state) {
     map_offset.y = 300 - state->player.pos.y;
 }
 
+void overworld_npcs_update(NPC *npcs, size_t npcs_sz, Tick tick) {
+    for (size_t i = 0; i < npcs_sz; ++i)
+        npc_update(&npcs[i], tick);
+}
+
 void overworld_update(OverworldState *state) {
     overworld_process_input(state);
     overworld_player_update(&state->player, state->tick);
+    overworld_npcs_update(state->npcs, state->npcs_sz, state->tick);
     overworld_process_collisions(state->colliders, ARR_LEN(state->colliders), &state->player);
     overworld_draw(state);
 
@@ -205,6 +211,11 @@ void overworld_load(OverworldState *state) {
     overworld_player_load(&state->player);
 }
 
+void overworld_npcs_unload(NPC *npcs, size_t npcs_sz) {
+    for (size_t i = 0; i < npcs_sz; ++i)
+        npc_unload(&npcs[i]);
+}
+
 void overworld_unload(OverworldState *state) {
     printf("overworld_unload()\n");
     arr_free(state->colliders);
@@ -213,5 +224,6 @@ void overworld_unload(OverworldState *state) {
     UnloadTexture(state->mg_tile_data.tilemap_tex);
     UnloadTexture(state->fg_tile_data.tilemap_tex);
     overworld_player_unload(&state->player);
+    overworld_npcs_unload(state->npcs, state->npcs_sz);
     free_tiles();
 }

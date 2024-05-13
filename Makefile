@@ -17,6 +17,7 @@ MODULE_SRCS = module.c \
 			  shared.c \
 			  collision.c \
 			  animation/animator.c \
+			  animation/animations.c \
 			  overworld/npc.c \
 			  overworld/overworld.c \
 			  overworld/overworld_player.c

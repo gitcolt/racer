@@ -1,5 +1,6 @@
 #define HR_DRIVER
 #include "hr.h"
+#include "colors.h"
 #include "state/state.h"
 
 #include "raylib.h"
@@ -20,7 +21,7 @@ int main() {
     while (!WindowShouldClose()) {
         BeginDrawing();
         DrawPoint3D((Vector3){0, 0, 0}, RED);
-        ClearBackground(RAYWHITE);
+        ClearBackground(COLOR_OOB);
         hr_update();
         EndDrawing();
     }

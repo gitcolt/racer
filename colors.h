@@ -13,4 +13,7 @@
 // debug
 #define COLOR_COLLIDER RED
 
+// misc
+#define COLOR_OOB DARKPURPLE
+
 #endif

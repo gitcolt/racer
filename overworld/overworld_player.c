@@ -1,6 +1,7 @@
 #include "overworld_player.h"
 #include "../tiles.h"
 #include "../mymath.h"
+#include "../animation/animations.h"
 
 #include <stdio.h>
 #include <string.h>
@@ -14,49 +15,10 @@ void overworld_player_load(OverworldPlayer *player) {
     player->pos.y = 300;
     player->collider.center = player->pos;
     player->collider.radius = PLAYER_COLLISION_RADIUS;
-    spritesheet_load(&player->spritesheet, "./assets/pokemon.png", 3, 12);
     player->walk_speed = 3;
     player->dir.x = 0;
     player->dir.y = 0;
-
-    animator_create(&player->animator, player->spritesheet);
-    AnimSpec anim_spec_walk_up = {
-        .id = ANIM_ID_WALK_UP,
-        .mode = ANIM_MODE_STATIC,
-        .nframes = 3,
-        .frame_row = 0,
-        .curr_frame_idx = 0,
-        .frame_duration = 10,
-    };
-    AnimSpec anim_spec_walk_down = {
-        .id = ANIM_ID_WALK_DOWN,
-        .mode = ANIM_MODE_STATIC,
-        .nframes = 3,
-        .frame_row = 1,
-        .curr_frame_idx = 0,
-        .frame_duration = 10,
-    };
-    AnimSpec anim_spec_walk_left = {
-        .id = ANIM_ID_WALK_LEFT,
-        .mode = ANIM_MODE_STATIC,
-        .nframes = 2,
-        .frame_row = 2,
-        .curr_frame_idx = 0,
-        .frame_duration = 10,
-    };
-    AnimSpec anim_spec_walk_right = {
-        .id = ANIM_ID_WALK_RIGHT,
-        .mode = ANIM_MODE_STATIC,
-        .nframes = 2,
-        .frame_row = 3,
-        .curr_frame_idx = 0,
-        .frame_duration = 10,
-    };
-    animator_add_anim_spec(&player->animator, anim_spec_walk_up);
-    animator_add_anim_spec(&player->animator, anim_spec_walk_down);
-    animator_add_anim_spec(&player->animator, anim_spec_walk_left);
-    animator_add_anim_spec(&player->animator, anim_spec_walk_right);
-    animator_set_anim(&player->animator, ANIM_ID_WALK_DOWN);
+    create_overworld_player_animator(&player->animator, &player->spritesheet);
 }
 
 void overworld_player_unload(OverworldPlayer *player) {

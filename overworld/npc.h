@@ -17,6 +17,8 @@ typedef struct {
 } NPC;
 
 void npc_load(NPC *npc, V2 tile_pos, const char *identifier);
+void npc_unload(NPC *npc);
+void npc_update(NPC *npc, Tick tick);
 void npc_draw(NPC *npc, V2 offset);
 
 #endif
