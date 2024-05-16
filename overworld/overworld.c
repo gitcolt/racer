@@ -167,6 +167,7 @@ void read_xml_dialog_file() {
 
     fseek(f, 0, SEEK_END);
     long size = ftell(f);
+    printf("size: %zu\n", size);
     fseek(f, 0, SEEK_SET);
 
     uint8_t buf[size];
@@ -178,11 +179,11 @@ void read_xml_dialog_file() {
         printf("Could not parse xml\n");
         exit(EXIT_FAILURE);
     }
-    Conversation dialogs = {0};
-    dialogs_parse_xml(&dialogs, doc);
-    for (int i = 0; i < dialogs.num_dialogs; ++i) {
-        dialog_validate(&dialogs.dialogs[i]);
-        dialog_print(&dialogs.dialogs[i]);
+    Conversation convo = {0};
+    dialogs_parse_xml(&convo, doc);
+    for (int i = 0; i < convo.num_dialogs; ++i) {
+        dialog_validate(&convo.dialogs[i]);
+        dialog_print(&convo.dialogs[i]);
     }
     xml_document_free(doc, false);
 }

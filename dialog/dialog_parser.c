@@ -64,7 +64,7 @@ static void parse_node_choices(Dialog *dialog, XmlNode *node) {
     }
 }
 
-static void parse_node_id(Dialog *dialog, XmlNode *node) {
+static void parse_node_dialog_id(Dialog *dialog, XmlNode *node) {
     get_node_content(dialog->id, node);
 }
 
@@ -87,7 +87,7 @@ static void parse_node_dialog(Dialog *dialog, XmlNode *node) {
         XmlNode *n = xml_node_child(node, i);
         get_node_name(node_name, n);
         if (NODE_NAME_MATCH(node_name, NODE_ID))
-            parse_node_id(dialog, n);
+            parse_node_dialog_id(dialog, n);
         else if (NODE_NAME_MATCH(node_name, NODE_TEXT))
             parse_node_text(dialog, n);
         else if (NODE_NAME_MATCH(node_name, NODE_NEXT))
@@ -151,16 +151,38 @@ void dialog_validate(Dialog *dialog) {
     }
 }
 
+void parse_node_conversation_id(Conversation *convo, XmlNode *node) {
+    get_node_content(convo->id, node);
+}
+
+void parse_node_conversation_dialogs(Conversation *convo, XmlNode *node) {
+    size_t num_children = xml_node_children(node);
+    for (int i = 0; i < num_children; ++i) {
+        XmlNode *dialog_node = xml_node_child(node, i);
+        Dialog dialog;
+        dialog_init(&dialog);
+        parse_node_dialog(&dialog, dialog_node);
+        convo->dialogs[convo->num_dialogs++] = dialog;
+    }
+}
+
 void dialogs_parse_xml(Conversation *convo, XmlDocument *doc) {
     XmlNode *root = xml_document_root(doc);
     int num_nodes = xml_node_children(root);
     for (int i = 0; i < num_nodes; ++i) {
         XmlNode *n = xml_node_child(root, i);
         get_node_name(node_name, n);
-        assert(NODE_NAME_MATCH(node_name, NODE_DIALOG));
-        Dialog dialog;
-        dialog_init(&dialog);
-        parse_node_dialog(&dialog, n);
-        convo->dialogs[convo->num_dialogs++] = dialog;
+        assert(NODE_NAME_MATCH(node_name, NODE_CONVERSATION));
+
+        size_t num_children = xml_node_children(n);
+        for (int i = 0; i < num_children; ++i) {
+            XmlNode *child = xml_node_child(n, i);
+            get_node_name(node_name, child);
+            if (NODE_NAME_MATCH(node_name, NODE_ID)) {
+                parse_node_conversation_id(convo, child);
+            } else if (NODE_NAME_MATCH(node_name, NODE_DIALOGS)) {
+                parse_node_conversation_dialogs(convo, child);
+            }
+        }
     }
 }

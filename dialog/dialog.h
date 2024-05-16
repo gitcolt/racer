@@ -28,6 +28,7 @@ typedef struct Dialog {
 } Dialog;
 
 typedef struct {
+    char id[MAX_NODE_CONTENT_SZ];
     size_t num_dialogs;
     Dialog dialogs[MAX_CONVERSATION_DIALOGS_SZ];
 } Conversation;

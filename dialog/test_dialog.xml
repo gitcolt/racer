@@ -1,23 +1,32 @@
 <Root>
-    <dialog>
-        <id>npc_offers_item</id>
-        <text>Hi, I'm an NPC. Would you like and item?</text>
-        <choices>
-            <choice>
-                <text>Yes, please.</text>
-                <next>receive_item</next>
-            </choice>
-        </choices>
-    </dialog>
-    <dialog>
-        <id>reject_item_offer</id>
-        <text>Ok, suit yourself</text>
-        <next>end</next>
-    </dialog>
-    <dialog>
-        <id>receive_item</id>
-        <text>You received 'item'</text>
-        <next>end</next>
-        <action>get_item</action>
-    </dialog>
+    <conversation>
+        <id>myconvo</id>
+        <dialogs>
+            <dialog>
+                <id>npc_offers_item</id>
+                <text>Hi, I'm an NPC. Would you like and item?</text>
+                <choices>
+                    <choice>
+                        <text>Yes, please.</text>
+                        <next>receive_item</next>
+                    </choice>
+                    <choice>
+                        <text>No</text>
+                        <next>end</next>
+                    </choice>
+                </choices>
+            </dialog>
+            <dialog>
+                <id>reject_item_offer</id>
+                <text>Ok, suit yourself</text>
+                <next>end</next>
+            </dialog>
+            <dialog>
+                <id>receive_item</id>
+                <text>You received 'item'</text>
+                <next>end</next>
+                <action>get_item</action>
+            </dialog>
+        </dialogs>
+    </conversation>
 </Root>

@@ -5,6 +5,8 @@
 #include "../shared.h"
 
 // Node names
+#define NODE_CONVERSATION "conversation"
+#define NODE_DIALOGS "dialogs"
 #define NODE_DIALOG "dialog"
 #define NODE_ID "id"
 #define NODE_TEXT "text"
