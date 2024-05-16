@@ -6,6 +6,7 @@
 #include "../spritesheet.h"
 #include "../tiles.h"
 #include "../collision.h"
+#include "../dialog/dialog.h"
 
 typedef struct {
     V2 mouse_pos;
@@ -19,6 +20,7 @@ typedef struct {
     BoxCollider *colliders;
     NPC *npcs;
     size_t npcs_sz;
+    Conversation convo;
 } OverworldState;
 
 #endif

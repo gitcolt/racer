@@ -1,6 +1,5 @@
 #include "dialog_parser.h"
 #include "../ansi_colors.h"
-#include "../shared.h"
 
 #include "../xml.h"
 
@@ -12,11 +11,6 @@
 
 char node_name[MAX_NODE_NAME_SZ] = {0};
 char node_content[MAX_NODE_CONTENT_SZ] = {0};
-
-static void dialog_init(Dialog *dialog) {
-    ZERO_MEM(dialog);
-    dialog->font = GetFontDefault();
-}
 
 static void get_node_name(char *dst, XmlNode *node) {
     XmlString *xml_str = xml_node_name(node);
@@ -32,7 +26,6 @@ static void get_node_content(char *dst, XmlNode *node) {
 
 static void parse_node_choice_text(Dialog *dialog, XmlNode *node) {
     get_node_content(node_content, node);
-    printf("node_content: %s\n", node_content);
     strcpy(dialog->choices[dialog->choices_sz].text, node_content);
 }
 
@@ -101,6 +94,38 @@ static void parse_node_dialog(Dialog *dialog, XmlNode *node) {
             exit(EXIT_FAILURE);
         }
     }
+}
+
+void load_conversation_from_xml(Conversation *convo, const char *filename) {
+    FILE *f = fopen(filename, "r");
+    if (!f) {
+        printf("Failed to open file '%s'\n", filename);
+        exit(EXIT_FAILURE);
+    }
+
+    fseek(f, 0, SEEK_END);
+    long size = ftell(f);
+    fseek(f, 0, SEEK_SET);
+
+    uint8_t buf[size];
+    fread(buf, *buf, size, f);
+    fclose(f);
+
+    struct xml_document *doc = xml_parse_document(buf, size);
+    if (!doc) {
+        printf("Could not parse xml\n");
+        exit(EXIT_FAILURE);
+    }
+    dialogs_parse_xml(convo, doc);
+    for (int i = 0; i < convo->num_dialogs; ++i) {
+        dialog_validate(&convo->dialogs[i]);
+        dialog_print(&convo->dialogs[i]);
+    }
+    xml_document_free(doc, false);
+}
+
+void unload_conversation(Conversation *convo) {
+    memset(convo, 0, sizeof(*convo));
 }
 
 void dialog_print(Dialog *dialog) {

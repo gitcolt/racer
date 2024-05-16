@@ -5,11 +5,9 @@
 
 #include <stddef.h>
 
-#define MAX_LINES 3
-
 #define MAX_CONVERSATION_DIALOGS_SZ 10
 #define MAX_NODE_NAME_SZ 99
-#define MAX_NODE_CONTENT_SZ 999
+#define MAX_NODE_CONTENT_SZ 140
 #define MAX_CHOICES_SZ 99
 
 typedef struct {
@@ -33,6 +31,7 @@ typedef struct {
     Dialog dialogs[MAX_CONVERSATION_DIALOGS_SZ];
 } Conversation;
 
+void dialog_init(Dialog *dialog);
 void dialog_show(Dialog *dialog, Rectangle rec);
 
 #endif

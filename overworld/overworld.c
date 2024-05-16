@@ -3,7 +3,6 @@
 #include "../tiles.h"
 #include "../dialog/dialog.h"
 #include "../dialog/dialog_parser.h"
-#include "../dialog_text.h"
 #include "../collision.h"
 #include "../dyn_arr.h"
 #include "../xml.h"
@@ -149,43 +148,9 @@ void overworld_update(OverworldState *state) {
             .width = 250,
             .height = 300,
         };
-        Dialog dialog = {
-            .font = GetFontDefault(),
-        };
-        strcpy(dialog.text, text_test);
+        Dialog dialog = state->convo.dialogs[0];
         dialog_show(&dialog, dialog_rec);
     }
-}
-
-void read_xml_dialog_file() {
-    const char *filename = "dialog/test_dialog.xml";
-    FILE *f = fopen(filename, "r");
-    if (!f) {
-        printf("Failed to open file '%s'\n", filename);
-        exit(EXIT_FAILURE);
-    }
-
-    fseek(f, 0, SEEK_END);
-    long size = ftell(f);
-    printf("size: %zu\n", size);
-    fseek(f, 0, SEEK_SET);
-
-    uint8_t buf[size];
-    fread(buf, *buf, size, f);
-    fclose(f);
-
-    struct xml_document *doc = xml_parse_document(buf, size);
-    if (!doc) {
-        printf("Could not parse xml\n");
-        exit(EXIT_FAILURE);
-    }
-    Conversation convo = {0};
-    dialogs_parse_xml(&convo, doc);
-    for (int i = 0; i < convo.num_dialogs; ++i) {
-        dialog_validate(&convo.dialogs[i]);
-        dialog_print(&convo.dialogs[i]);
-    }
-    xml_document_free(doc, false);
 }
 
 void overworld_load(OverworldState *state) {
@@ -244,7 +209,7 @@ void overworld_load(OverworldState *state) {
 
     overworld_player_load(&state->player);
 
-    read_xml_dialog_file();
+    load_conversation_from_xml(&state->convo, "dialog/test_dialog.xml");
 }
 
 void overworld_npcs_unload(NPC *npcs, size_t npcs_sz) {
@@ -261,5 +226,6 @@ void overworld_unload(OverworldState *state) {
     UnloadTexture(state->fg_tile_data.tilemap_tex);
     overworld_player_unload(&state->player);
     overworld_npcs_unload(state->npcs, state->npcs_sz);
+    unload_conversation(&state->convo);
     free_tiles();
 }

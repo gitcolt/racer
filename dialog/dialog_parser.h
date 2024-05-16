@@ -15,6 +15,8 @@
 #define NODE_NEXT "next"
 #define NODE_ACTION "action"
 
+void load_conversation_from_xml(Conversation *convo, const char *filename);
+void unload_conversation(Conversation *convo);
 void dialogs_parse_xml(Conversation *dialogs, XmlDocument *doc);
 void dialog_validate(Dialog *dialog);
 void dialog_print(Dialog *dialog);

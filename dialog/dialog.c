@@ -1,12 +1,18 @@
 #include "dialog.h"
 #include "../text.h"
 #include "../colors.h"
+#include "../shared.h"
 
 #include <string.h>
 #include <stdio.h>
 
 static const float border_size = 15;
 static const float text_margin = 20;
+
+void dialog_init(Dialog *dialog) {
+    ZERO_MEM(dialog);
+    dialog->font = GetFontDefault();
+}
 
 void dialog_show(Dialog *dialog, Rectangle rec) {
     DrawRectangleRec(rec, COLOR_DIALOG_BORDER);
