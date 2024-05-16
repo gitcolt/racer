@@ -1,12 +1,15 @@
 #include "overworld.h"
 #include "layer_names.h"
 #include "../tiles.h"
-#include "../dialog.h"
+#include "../dialog/dialog.h"
+#include "../dialog/dialog_parser.h"
 #include "../dialog_text.h"
 #include "../collision.h"
 #include "../dyn_arr.h"
+#include "../xml.h"
 
 #include <stdio.h>
+#include <stdlib.h>
 
 static V2 map_offset = { 0, 0 };
 static bool show_dialog = false;
@@ -154,6 +157,31 @@ void overworld_update(OverworldState *state) {
     }
 }
 
+void read_xml_dialog_file() {
+    const char *filename = "dialog/test_dialog.xml";
+    FILE *f = fopen(filename, "r");
+    if (!f) {
+        printf("Failed to open file '%s'\n", filename);
+        exit(EXIT_FAILURE);
+    }
+
+    fseek(f, 0, SEEK_END);
+    long size = ftell(f);
+    fseek(f, 0, SEEK_SET);
+
+    uint8_t buf[size];
+    fread(buf, *buf, size, f);
+    fclose(f);
+
+    struct xml_document *doc = xml_parse_document(buf, size);
+    if (!doc) {
+        printf("Could not parse xml\n");
+        exit(EXIT_FAILURE);
+    }
+    parse_dialog_xml(doc);
+    xml_document_free(doc, false);
+}
+
 void overworld_load(OverworldState *state) {
     load_tiles();
     struct levels *lvl_one = getLevel("Level_0");
@@ -209,6 +237,8 @@ void overworld_load(OverworldState *state) {
     }
 
     overworld_player_load(&state->player);
+
+    read_xml_dialog_file();
 }
 
 void overworld_npcs_unload(NPC *npcs, size_t npcs_sz) {

@@ -105,6 +105,11 @@ void hr_watch_init(const char *watch_dir) {
         perror("inotify_add_watch");
         exit(EXIT_FAILURE);
     }
+    int wd4 = inotify_add_watch(inotify_fd, "dialog", IN_MODIFY);
+    if (wd4 < 0) {
+        perror("inotify_add_watch");
+        exit(EXIT_FAILURE);
+    }
 }
 
 bool hr_check_modified() {

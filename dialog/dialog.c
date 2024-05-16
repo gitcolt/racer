@@ -1,6 +1,6 @@
-#include "text.h"
 #include "dialog.h"
-#include "colors.h"
+#include "../text.h"
+#include "../colors.h"
 
 #include <string.h>
 #include <stdio.h>

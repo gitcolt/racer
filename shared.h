@@ -23,4 +23,8 @@ enum AnimIdOverworldCharacter {
     ANIM_ID_WALK_RIGHT,
 };
 
+char *ltrim(char *str);
+char *rtrim(char *str);
+char *trim(char *str);
+
 #endif

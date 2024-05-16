@@ -12,12 +12,14 @@ MODULE_SRCS = module.c \
 			  spritesheet.c \
 			  tiles.c \
 			  $(LIBCLDTK) \
-			  dialog.c \
 			  text.c \
 			  shared.c \
 			  collision.c \
+			  xml.c \
 			  animation/animator.c \
 			  animation/animations.c \
+			  dialog/dialog.c \
+			  dialog/dialog_parser.c \
 			  overworld/npc.c \
 			  overworld/overworld.c \
 			  overworld/overworld_player.c
