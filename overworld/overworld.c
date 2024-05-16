@@ -150,9 +150,9 @@ void overworld_update(OverworldState *state) {
             .height = 300,
         };
         Dialog dialog = {
-            .text_content = text_test,
             .font = GetFontDefault(),
         };
+        strcpy(dialog.text, text_test);
         dialog_show(&dialog, dialog_rec);
     }
 }
@@ -178,7 +178,12 @@ void read_xml_dialog_file() {
         printf("Could not parse xml\n");
         exit(EXIT_FAILURE);
     }
-    parse_dialog_xml(doc);
+    Conversation dialogs = {0};
+    dialogs_parse_xml(&dialogs, doc);
+    for (int i = 0; i < dialogs.num_dialogs; ++i) {
+        dialog_validate(&dialogs.dialogs[i]);
+        dialog_print(&dialogs.dialogs[i]);
+    }
     xml_document_free(doc, false);
 }
 

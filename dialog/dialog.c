@@ -21,5 +21,5 @@ void dialog_show(Dialog *dialog, Rectangle rec) {
     rec.height -= text_margin;
     rec.x += text_margin/2;
     rec.y += text_margin/2;
-    draw_text_rec(dialog->text_content, rec, dialog->font);
+    draw_text_rec(dialog->text, rec, dialog->font);
 }

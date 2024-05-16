@@ -27,4 +27,10 @@ char *ltrim(char *str);
 char *rtrim(char *str);
 char *trim(char *str);
 
+typedef struct xml_node XmlNode;
+typedef struct xml_string XmlString;
+typedef struct xml_document XmlDocument;
+
+#define ZERO_MEM(ptr) memset(ptr, 0, sizeof(*(ptr)))
+
 #endif
