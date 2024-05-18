@@ -16,6 +16,7 @@ MODULE_SRCS = module.c \
 			  shared.c \
 			  collision.c \
 			  xml.c \
+			  sxml.c \
 			  animation/animator.c \
 			  animation/animations.c \
 			  dialog/dialog.c \

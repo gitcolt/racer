@@ -1,97 +1,144 @@
 #include "dialog_parser.h"
-#include "../ansi_colors.h"
 
-#include "../xml.h"
-
+#include <stdio.h>
+#include <memory.h>
 #include <stdlib.h>
-#include <assert.h>
 
-#define NODE_NAME_MATCH(node_str, name) \
-    !strcmp(node_str, name)
+#define MAX_TEXT_SZ 128
 
-char node_name[MAX_NODE_NAME_SZ] = {0};
-char node_content[MAX_NODE_CONTENT_SZ] = {0};
-
-static void get_node_name(char *dst, XmlNode *node) {
-    XmlString *xml_str = xml_node_name(node);
-    memset(dst, 0, MAX_NODE_NAME_SZ);
-    xml_string_copy(xml_str, (uint8_t *)dst, xml_string_length(xml_str));
+static void parse_node_dialog_text(Conversation *convo,
+                                   const char *content_start,
+                                   size_t content_len) {
+    char dialog_text_str[MAX_TEXT_SZ];
+    memcpy(dialog_text_str, content_start, content_len);
+    dialog_text_str[content_len] = '\0';
+    strcpy(convo->dialogs[convo->num_dialogs].text, dialog_text_str);
 }
 
-static void get_node_content(char *dst, XmlNode *node) {
-    XmlString *xml_str = xml_node_content(node);
-    memset(dst, 0, MAX_NODE_NAME_SZ);
-    xml_string_copy(xml_str, (uint8_t *)dst, xml_string_length(xml_str));
+static void parse_node_dialog_next(Conversation *convo,
+                                   const char *content_start,
+                                   size_t content_len) {
+    char dialog_next_str[MAX_TEXT_SZ];
+    memcpy(dialog_next_str, content_start, content_len);
+    dialog_next_str[content_len] = '\0';
+    strcpy(convo->dialogs[convo->num_dialogs].next, dialog_next_str);
 }
 
-static void parse_node_choice_text(Dialog *dialog, XmlNode *node) {
-    get_node_content(node_content, node);
-    strcpy(dialog->choices[dialog->choices_sz].text, node_content);
+static void parse_node_dialog_action(Conversation *convo,
+                                     const char *content_start,
+                                     size_t content_len) {
+    char dialog_action_str[MAX_TEXT_SZ];
+    memcpy(dialog_action_str, content_start, content_len);
+    dialog_action_str[content_len] = '\0';
+    strcpy(convo->dialogs[convo->num_dialogs].action, dialog_action_str);
 }
 
-static void parse_node_choice_next(Dialog *dialog, XmlNode *node) {
-    get_node_content(node_content, node);
-    strcpy(dialog->choices[dialog->choices_sz].next, node_content);
+static void parse_node_dialog(Conversation *convo) {
+    Dialog *dialog = &convo->dialogs[convo->num_dialogs];
+    memset(dialog, 0, sizeof(*dialog));
+    memset(dialog->text, 0, sizeof(*dialog->text));
+    memset(dialog->next, 0, sizeof(*dialog->next));
 }
 
-static void parse_node_choice(Dialog *dialog, XmlNode *node) {
-    size_t num_children = xml_node_children(node);
-    for (int i = 0; i < num_children; ++i) {
-        XmlNode *child = xml_node_child(node, i);
-        get_node_name(node_name, child);
-        if (NODE_NAME_MATCH(node_name, NODE_TEXT))
-            parse_node_choice_text(dialog, child);
-        else if (NODE_NAME_MATCH(node_name, NODE_NEXT))
-            parse_node_choice_next(dialog, child);
-    }
-    ++dialog->choices_sz;
+static void parse_node_choice(Conversation *convo) {
+    Dialog *curr_dialog = &convo->dialogs[convo->num_dialogs];
+    Choice *choice = &curr_dialog->choices[curr_dialog->num_choices];
+    memset(choice, 0, sizeof(*choice));
 }
 
-static void parse_node_choices(Dialog *dialog, XmlNode *node) {
-    size_t num_children = xml_node_children(node);
-    for (int i = 0; i < num_children; ++i) {
-        XmlNode *choice = xml_node_child(node, i);
-        get_node_name(node_name, choice);
-        assert(NODE_NAME_MATCH(node_name, NODE_CHOICE));
-        parse_node_choice(dialog, choice);
-    }
+static void parse_node_choice_text(Conversation *convo,
+                                   const char *content_start,
+                                   size_t content_len) {
+    char choice_text_str[MAX_TEXT_SZ];
+    memcpy(choice_text_str, content_start, content_len);
+    choice_text_str[content_len] = '\0';
+    Dialog *dialog = &convo->dialogs[convo->num_dialogs];
+    Choice *choice = &dialog->choices[dialog->num_choices];
+    printf("choice_text_str: %s\n", choice_text_str);
+    strcpy(choice->text, choice_text_str);
 }
 
-static void parse_node_dialog_id(Dialog *dialog, XmlNode *node) {
-    get_node_content(dialog->id, node);
+static void parse_node_choice_next(Conversation *convo,
+                                   const char *content_start,
+                                   size_t content_len) {
+    char choice_next_str[MAX_TEXT_SZ];
+    memcpy(choice_next_str, content_start, content_len);
+    choice_next_str[content_len] = '\0';
+    Dialog *dialog = &convo->dialogs[convo->num_dialogs];
+    Choice *choice = &dialog->choices[dialog->num_choices];
+    printf("choice_next_str: %s\n", choice_next_str);
+    strcpy(choice->next, choice_next_str);
 }
 
-static void parse_node_text(Dialog *dialog, XmlNode *node) {
-    get_node_content(dialog->text, node);
+static void parse_node_dialog_id(Conversation *convo,
+                                 const char *content_start,
+                                 size_t content_len) {
+    char dialog_id_str[MAX_TEXT_SZ];
+    memcpy(dialog_id_str, content_start, content_len);
+    dialog_id_str[content_len] = '\0';
+    strcpy(convo->dialogs[convo->num_dialogs].id, dialog_id_str);
 }
 
-static void parse_node_next(Dialog *dialog, XmlNode *node) {
-    get_node_content(dialog->next, node);
+static void parse_node_conversation_id(Conversation *convo,
+                                       const char *content_start,
+                                       size_t content_len) {
+    char conversation_id_str[MAX_TEXT_SZ];
+    memcpy(conversation_id_str, content_start, content_len);
+    conversation_id_str[content_len] = '\0';
+    strcpy(convo->id, conversation_id_str);
 }
 
-static void parse_node_action(Dialog *dialog, XmlNode *node) {
-    get_node_content(dialog->action, node);
-}
+static void parse(Conversation *convo, const char *buf, sxmltok_t *toks, size_t num_tokens) {
+    for (int i = 0; i < num_tokens; ++i) {
+        const sxmltok_t *tok = toks + i; // ..
+        if (tok->type == SXML_STARTTAG) {
 
-static void parse_node_dialog(Dialog *dialog, XmlNode *node) {
+#define NODE_MATCH_START(node_name) \
+     !memcmp(buf + tok->startpos, node_name ">", strlen(node_name) + 1) \
+        ? ( \
+                content_start = buf + tok->endpos + 1, \
+                content_end = strstr(content_start, "</" node_name ), \
+                content_len = content_end - content_start, \
+                true \
+                ) \
+        : false
 
-    size_t num_children = xml_node_children(node);
-    for (int i = 0; i < num_children; ++i) {
-        XmlNode *n = xml_node_child(node, i);
-        get_node_name(node_name, n);
-        if (NODE_NAME_MATCH(node_name, NODE_ID))
-            parse_node_dialog_id(dialog, n);
-        else if (NODE_NAME_MATCH(node_name, NODE_TEXT))
-            parse_node_text(dialog, n);
-        else if (NODE_NAME_MATCH(node_name, NODE_NEXT))
-            parse_node_next(dialog, n);
-        else if (NODE_NAME_MATCH(node_name, NODE_CHOICES))
-            parse_node_choices(dialog, n);
-        else if (NODE_NAME_MATCH(node_name, NODE_ACTION))
-            parse_node_action(dialog, n);
-        else {
-            fprintf(stderr, "Bad XML node '%s'\n", node_name);
-            exit(EXIT_FAILURE);
+            const char *content_start;
+            const char *content_end;
+            size_t content_len;
+
+            if (NODE_MATCH_START(NODE_CONVERSATION)) {
+                // printf("content_len (convo): %zu\n", content_len);
+            } else if (NODE_MATCH_START(NODE_CONVERSATION_ID)) {
+                parse_node_conversation_id(convo, content_start, content_len);
+            } else if (NODE_MATCH_START(NODE_DIALOG)) {
+                parse_node_dialog(convo);
+            } else if (NODE_MATCH_START(NODE_DIALOG_ID)) {
+                parse_node_dialog_id(convo, content_start, content_len);
+            } else if (NODE_MATCH_START(NODE_DIALOG_TEXT)) {
+                parse_node_dialog_text(convo, content_start, content_len);
+            } else if (NODE_MATCH_START(NODE_CHOICE_TEXT)) {
+                parse_node_choice_text(convo, content_start, content_len);
+            } else if (NODE_MATCH_START(NODE_CHOICE)) {
+                parse_node_choice(convo);
+            } else if (NODE_MATCH_START(NODE_DIALOG_NEXT)) {
+                parse_node_dialog_next(convo, content_start, content_len);
+            } else if (NODE_MATCH_START(NODE_CHOICE_NEXT)) {
+                // 
+            } else if (NODE_MATCH_START(NODE_DIALOG_ACTION)) {
+                parse_node_dialog_action(convo, content_start, content_len);
+            }
+        } else if (tok->type == SXML_ENDTAG) {
+
+#define NODE_MATCH_END(node_name) \
+     !memcmp(buf + tok->startpos - 1, "/" node_name ">", strlen(node_name) + 2)
+
+            if (NODE_MATCH_END(NODE_DIALOG))
+                ++convo->num_dialogs;
+            else if (NODE_MATCH_END(NODE_CHOICE))
+                ++convo->dialogs[convo->num_dialogs].num_choices;
+        } else {
+            // ???
         }
     }
 }
@@ -99,115 +146,74 @@ static void parse_node_dialog(Dialog *dialog, XmlNode *node) {
 void load_conversation_from_xml(Conversation *convo, const char *filename) {
     FILE *f = fopen(filename, "r");
     if (!f) {
-        printf("Failed to open file '%s'\n", filename);
+        fprintf(stderr, "Failed to open file '%s'\n", filename);
         exit(EXIT_FAILURE);
     }
-
     fseek(f, 0, SEEK_END);
     long size = ftell(f);
     fseek(f, 0, SEEK_SET);
-
-    uint8_t buf[size];
-    fread(buf, *buf, size, f);
+    char buf[size];
+    memset(buf, 0, size);
+    fread(buf, 1, size, f);
     fclose(f);
 
-    struct xml_document *doc = xml_parse_document(buf, size);
-    if (!doc) {
-        printf("Could not parse xml\n");
-        exit(EXIT_FAILURE);
+#define NUM_TOKS 128
+    sxmltok_t toks[NUM_TOKS];
+    sxml_t parser;
+    sxml_init(&parser);
+
+    sxmlerr_t err;
+    while ((err = sxml_parse(&parser, &buf[0], size, toks, NUM_TOKS)) == SXML_SUCCESS) {
+        // switch (err) {
+        //     case SXML_SUCCESS:
+        //         break;
+        //     case SXML_ERROR_TOKENSFULL:
+        //         fprintf(stderr, "SXML_ERROR_TOKENSFULL\n");
+        //         break;
+        //     case SXML_ERROR_BUFFERDRY:
+        //         fprintf(stderr, "SXML_ERROR_BUFFERDRY\n");
+        //         goto done_parsing;
+        //     case SXML_ERROR_XMLINVALID:
+        //         fprintf(stderr, "SXML_ERROR_XMLINVALID\n");
+        //         break;
+        //     default:
+        //         fprintf(stderr, "Unknown error code '%d'\n", err);
+        // }
+        parse(convo, buf, toks, parser.ntokens);
     }
-    dialogs_parse_xml(convo, doc);
-    for (int i = 0; i < convo->num_dialogs; ++i) {
-        dialog_validate(&convo->dialogs[i]);
-        dialog_print(&convo->dialogs[i]);
-    }
-    xml_document_free(doc, false);
 }
 
 void unload_conversation(Conversation *convo) {
     memset(convo, 0, sizeof(*convo));
 }
 
-void dialog_print(Dialog *dialog) {
-    printf("Dialog:\n");
-    printf("\t%7s: %s\n", "id", *dialog->id ? dialog->id : "NULL");
-    printf("\t%7s: %s\n", "text", *dialog->text ? dialog->text : "NULL");
-    printf("\t%7s: %s\n", "next", *dialog->next ? dialog->next : "NULL");
-    printf("\t%7s: %s\n", "action", *dialog->action ? dialog->action : "NULL");
-    printf("\t%7s: ", "choices");
-    if (!dialog->choices_sz)
-        printf("None\n");
-    else {
-        printf("\n");
-        for (int i = 0; i < dialog->choices_sz; ++i) {
-            printf("\t\ttext: %s\n", dialog->choices[i].text);
-            printf("\t\tnext: %s\n", dialog->choices[i].next);
-        }
-    }
-}
-
 void dialog_validate(Dialog *dialog) {
-    printf(YEL_TXT "[dialog_validate]: UNIMPLEMENTED\n" RST_COL);
-    if (!(strlen(dialog->text) > 0)) {
-            printf(GRN_TXT "INVALID DIALOG: invalid text node\n" RST_COL);
-            return;
-    }
-    // should have either a <choices> node or a <next> node exclusively
-    if (dialog->choices_sz) { // validate <choices> node
-        if (*dialog->next) {
-            printf(GRN_TXT "INVALID DIALOG: Node should have either a <choices> node"
-                    "or a <next> node, not both\n" RST_COL);
-            return ;
+    printf("dialog_validate()\n");
+}
+
+void choice_print(Choice *choice) {
+    printf("\t\ttext: %s\n", choice->text);
+    printf("\t\tnext: %s\n", choice->next);
+}
+
+void dialog_print(Dialog *dialog) {
+    printf("DIALOG:\n");
+    printf("\t%7s: %s\n", "id", dialog->id);
+    printf("\t%7s: %s\n", "text", dialog->text);
+    printf("\t%7s: %s\n", "next", strlen(dialog->next) ? dialog->next : "NULL");
+    printf("\t%7s: %s\n", "action", strlen(dialog->action) ? dialog->action : "NULL");
+    if (dialog->num_choices) {
+        printf("\tCHOICES:\n");
+        for (int i = 0; i < dialog->num_choices; ++i) {
+            choice_print(&dialog->choices[i]);
         }
-        for (int i = 0; i < dialog->choices_sz; ++i) {
-            if (!(strlen(dialog->choices[i].text) > 0)) {
-                printf(GRN_TXT "INVALID DIALOG: invalid <choice> node (%d)\n" RST_COL, i);
-                return;
-            }
-        }
-    } else { // validate <next> node
-        if (!(strlen(dialog->next) > 0)) {
-            printf(GRN_TXT "INVALID DIALOG: invalid <next> node\n" RST_COL);
-            return;
-        }
-    }
-    if (strlen(dialog->action) > 0) { // validate <action> node
-        // TODO
     }
 }
 
-void parse_node_conversation_id(Conversation *convo, XmlNode *node) {
-    get_node_content(convo->id, node);
-}
-
-void parse_node_conversation_dialogs(Conversation *convo, XmlNode *node) {
-    size_t num_children = xml_node_children(node);
-    for (int i = 0; i < num_children; ++i) {
-        XmlNode *dialog_node = xml_node_child(node, i);
-        Dialog dialog;
-        dialog_init(&dialog);
-        parse_node_dialog(&dialog, dialog_node);
-        convo->dialogs[convo->num_dialogs++] = dialog;
-    }
-}
-
-void dialogs_parse_xml(Conversation *convo, XmlDocument *doc) {
-    XmlNode *root = xml_document_root(doc);
-    int num_nodes = xml_node_children(root);
-    for (int i = 0; i < num_nodes; ++i) {
-        XmlNode *n = xml_node_child(root, i);
-        get_node_name(node_name, n);
-        assert(NODE_NAME_MATCH(node_name, NODE_CONVERSATION));
-
-        size_t num_children = xml_node_children(n);
-        for (int i = 0; i < num_children; ++i) {
-            XmlNode *child = xml_node_child(n, i);
-            get_node_name(node_name, child);
-            if (NODE_NAME_MATCH(node_name, NODE_ID)) {
-                parse_node_conversation_id(convo, child);
-            } else if (NODE_NAME_MATCH(node_name, NODE_DIALOGS)) {
-                parse_node_conversation_dialogs(convo, child);
-            }
-        }
+void conversation_print(Conversation *convo) {
+    printf("convo id: '%s'\n", convo->id);
+    for (int i = 0; i < convo->num_dialogs; ++i) {
+        Dialog *dialog = &convo->dialogs[i];
+        dialog_print(dialog);
     }
 }

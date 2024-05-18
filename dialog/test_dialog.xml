@@ -1,31 +1,31 @@
 <Root>
     <conversation>
-        <id>myconvo</id>
+        <conversation_id>myconvo</conversation_id>
         <dialogs>
             <dialog>
-                <id>npc_offers_item</id>
-                <text>Hi, I'm an NPC. Would you like and item?</text>
+                <dialog_id>npc_offers_item</dialog_id>
+                <dialog_text>Hi, I'm an NPC. Would you like an item?</dialog_text>
                 <choices>
                     <choice>
-                        <text>Yes, please.</text>
-                        <next>receive_item</next>
+                        <choice_text>Yes, please.</choice_text>
+                        <choice_next>receive_item</choice_next>
                     </choice>
                     <choice>
-                        <text>No</text>
-                        <next>end</next>
+                        <choice_text>No</choice_text>
+                        <choice_next>end</choice_next>
                     </choice>
                 </choices>
             </dialog>
             <dialog>
-                <id>reject_item_offer</id>
-                <text>Ok, suit yourself</text>
-                <next>end</next>
+                <dialog_id>reject_item_offer</dialog_id>
+                <dialog_text>Ok, suit yourself</dialog_text>
+                <dialog_next>end</dialog_next>
             </dialog>
             <dialog>
-                <id>receive_item</id>
-                <text>You received 'item'</text>
-                <next>end</next>
-                <action>get_item</action>
+                <dialog_id>receive_item</dialog_id>
+                <dialog_text>You received <var>special_item</var></dialog_text>
+                <dialog_next>end</dialog_next>
+                <dialog_action>get_item</dialog_action>
             </dialog>
         </dialogs>
     </conversation>

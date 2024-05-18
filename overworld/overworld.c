@@ -210,6 +210,7 @@ void overworld_load(OverworldState *state) {
     overworld_player_load(&state->player);
 
     load_conversation_from_xml(&state->convo, "dialog/test_dialog.xml");
+    conversation_print(&state->convo);
 }
 
 void overworld_npcs_unload(NPC *npcs, size_t npcs_sz) {

@@ -5,6 +5,7 @@
 
 #include <string.h>
 #include <stdio.h>
+#include <stdlib.h>
 
 static const float border_size = 15;
 static const float text_margin = 20;
@@ -28,4 +29,22 @@ void dialog_show(Dialog *dialog, Rectangle rec) {
     rec.x += text_margin/2;
     rec.y += text_margin/2;
     draw_text_rec(dialog->text, rec, dialog->font);
+
+    if (dialog->num_choices) {
+        rec.y += 60;
+        for (int i = 0; i < dialog->num_choices; ++i) {
+            Choice *choice = &dialog->choices[i];
+            char *buf;
+            asprintf(&buf, ">  %s", choice->text);
+            draw_text_rec(buf, rec, dialog->font);
+            free(buf);
+            // draw_text_rec(choice->text, rec, dialog->font);
+            rec.y += 30;
+        }
+    }
+}
+
+void var_set(Var *var, void *val, enum VarType type) {
+    var->val = val;
+    var->type = type;
 }
