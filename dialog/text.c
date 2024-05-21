@@ -1,6 +1,6 @@
 #include "text.h"
-#include "shared.h"
-#include "mymath.h"
+#include "../mymath.h"
+#include "../shared.h"
 
 #include <string.h>
 #include <stdio.h>

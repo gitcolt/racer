@@ -12,7 +12,6 @@ MODULE_SRCS = module.c \
 			  spritesheet.c \
 			  tiles.c \
 			  $(LIBCLDTK) \
-			  text.c \
 			  shared.c \
 			  collision.c \
 			  xml.c \
@@ -21,6 +20,7 @@ MODULE_SRCS = module.c \
 			  animation/animations.c \
 			  dialog/dialog.c \
 			  dialog/dialog_parser.c \
+			  dialog/text.c \
 			  overworld/npc.c \
 			  overworld/overworld.c \
 			  overworld/overworld_player.c

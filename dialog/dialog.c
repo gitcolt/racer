@@ -1,5 +1,5 @@
 #include "dialog.h"
-#include "../text.h"
+#include "text.h"
 #include "../colors.h"
 #include "../shared.h"
 
