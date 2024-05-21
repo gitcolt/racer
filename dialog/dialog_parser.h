@@ -19,6 +19,8 @@
 #define NODE_CHOICE_NEXT "choice_next"
 #define NODE_DIALOG_ACTION "dialog_action"
 #define NODE_CHOICE_ACTION "choice_action"
+#define NODE_VAR "var"
+#define NODE_HL "hl"
 
 void load_conversation_from_xml(Conversation *convo, const char *filename);
 void unload_conversation(Conversation *convo);

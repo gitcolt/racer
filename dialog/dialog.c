@@ -12,7 +12,10 @@ static const float text_margin = 20;
 
 void dialog_init(Dialog *dialog) {
     ZERO_MEM(dialog);
+    memset(dialog, 0, sizeof(*dialog));
     dialog->font = GetFontDefault();
+    memset(dialog->text, 0, sizeof(*dialog->text));
+    memset(dialog->next, 0, sizeof(*dialog->next));
 }
 
 void dialog_show(Dialog *dialog, Rectangle rec) {
@@ -28,10 +31,10 @@ void dialog_show(Dialog *dialog, Rectangle rec) {
     rec.height -= text_margin;
     rec.x += text_margin/2;
     rec.y += text_margin/2;
-    draw_text_rec(dialog->text, rec, dialog->font);
+    int text_end_y = draw_text_rec(dialog->text, rec, dialog->font);
 
     if (dialog->num_choices) {
-        rec.y += 60;
+        rec.y = text_end_y + 20;
         for (int i = 0; i < dialog->num_choices; ++i) {
             Choice *choice = &dialog->choices[i];
             char *buf;
@@ -44,7 +47,10 @@ void dialog_show(Dialog *dialog, Rectangle rec) {
     }
 }
 
-void var_set(Var *var, void *val, enum VarType type) {
-    var->val = val;
-    var->type = type;
+void var_set_int(Var *var, int val) {
+    sprintf(var->val_str, "%d", val);
+}
+
+void var_set_str(Var *var, const char *val) {
+    strcpy(var->val_str, val);
 }

@@ -5,7 +5,6 @@
 #include "../dialog/dialog_parser.h"
 #include "../collision.h"
 #include "../dyn_arr.h"
-#include "../xml.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -145,7 +144,7 @@ void overworld_update(OverworldState *state) {
         Rectangle dialog_rec = {
             .x = 100,
             .y = 100,
-            .width = 250,
+            .width = 300,
             .height = 300,
         };
         Dialog dialog = state->convo.dialogs[0];

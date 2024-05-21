@@ -15,7 +15,7 @@ int main() {
     HR_CTX(state);
     SetTraceLogLevel(LOG_ERROR);
     InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, ":)");
-    SetWindowPosition(3000, 0);
+    SetWindowPosition(WIN_POS_X, WIN_POS_Y);
     hr_init(".", "libmodule.so");
     SetTargetFPS(60);
 

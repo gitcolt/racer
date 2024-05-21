@@ -17,8 +17,9 @@ static char last_func_name[LAST_FUNC_NAME_LEN];
 #define _DEFINE_TEXT_REC_TEST(test_name, text, id) \
     MU_TEST(test_name##id) { \
         InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, text[0] == '\0' ? "(empty)" : text); \
+        SetWindowPosition(WIN_POS_X, WIN_POS_Y); \
         BeginDrawing();  \
-        ClearBackground(RAYWHITE); \
+        ClearBackground(ORANGE); \
         const char *text_to_draw = (text); \
         Rectangle rec = { \
             .x = 100, \
@@ -27,6 +28,7 @@ static char last_func_name[LAST_FUNC_NAME_LEN];
             .height = 300, \
         }; \
         Font font = GetFontDefault(); \
+        DrawRectangleRec(rec, BLUE); \
         draw_text_rec(text_to_draw, rec, font); \
         SET_LAST_FUNC_NAME(); \
     }

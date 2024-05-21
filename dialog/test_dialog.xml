@@ -23,7 +23,7 @@
             </dialog>
             <dialog>
                 <dialog_id>receive_item</dialog_id>
-                <dialog_text>You received <var>special_item</var></dialog_text>
+                <dialog_text>You received '<var>special_item</var>'!</dialog_text>
                 <dialog_next>end</dialog_next>
                 <dialog_action>get_item</dialog_action>
             </dialog>

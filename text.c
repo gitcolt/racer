@@ -5,13 +5,13 @@
 #include <string.h>
 #include <stdio.h>
 
-void draw_text_rec(const char *text, Rectangle rec, Font font) {
+int draw_text_rec(const char *text, Rectangle rec, Font font) {
     char *full_text = strdup(text);
 
     V2 text_size = MeasureTextEx(font, text, FONT_SIZE, HORIZ_SPACING);
     int text_len = TextLength(full_text);
     float char_width = text_size.x / text_len;
-    int max_chars_per_line = rec.width / (char_width + HORIZ_SPACING);
+    int max_chars_per_line = rec.width / (char_width);
     char *line_start = &full_text[0];
     char *line_end;
     if (&full_text[text_len] < &line_start[max_chars_per_line])
@@ -46,4 +46,6 @@ void draw_text_rec(const char *text, Rectangle rec, Font font) {
         line_end = MIN(&line_start[max_chars_per_line], &full_text[text_len]);
         pos_y += text_size.y;
     }
+
+    return pos_y;
 }
