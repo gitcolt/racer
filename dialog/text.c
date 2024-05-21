@@ -5,7 +5,7 @@
 #include <string.h>
 #include <stdio.h>
 
-int draw_text_rec(const char *text, Rectangle rec, Font font) {
+int draw_text_rec(const char *text, Rectangle rec, Font font, Color color) {
     char *full_text = strdup(text);
 
     V2 text_size = MeasureTextEx(font, text, FONT_SIZE, HORIZ_SPACING);
@@ -40,7 +40,7 @@ int draw_text_rec(const char *text, Rectangle rec, Font font) {
                     0,
                     FONT_SIZE,
                     HORIZ_SPACING,
-                    BLACK);
+                    color);
 
         line_start = line_end + 1;
         line_end = MIN(&line_start[max_chars_per_line], &full_text[text_len]);

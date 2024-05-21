@@ -1,9 +1,9 @@
 <Root>
     <conversation>
-        <conversation_id>myconvo</conversation_id>
+        <conversation_id>npc_offers_item</conversation_id>
         <dialogs>
             <dialog>
-                <dialog_id>npc_offers_item</dialog_id>
+                <dialog_id>start</dialog_id>
                 <dialog_text>Hi, I'm an NPC. Would you like an item?</dialog_text>
                 <choices>
                     <choice>
@@ -12,7 +12,7 @@
                     </choice>
                     <choice>
                         <choice_text>No</choice_text>
-                        <choice_next>end</choice_next>
+                        <choice_next>reject_item_offer</choice_next>
                     </choice>
                 </choices>
             </dialog>

@@ -98,34 +98,46 @@ void overworld_draw(OverworldState *state) {
 void overworld_process_input(OverworldState *state) {
     state->mouse_pos = GetMousePosition();
 
-    bool key_up = IsKeyDown(KEY_UP);
-    bool key_down = IsKeyDown(KEY_DOWN);
-    bool key_left = IsKeyDown(KEY_LEFT);
-    bool key_right = IsKeyDown(KEY_RIGHT);
-    const float pan_speed = state->player.walk_speed;
-    if (key_up) {
-        overworld_player_set_dir(&state->player, DIR_UP);
-    }
-    if (key_down) {
-        overworld_player_set_dir(&state->player, DIR_DOWN);
-    }
-    if (key_left) {
-        overworld_player_set_dir(&state->player, DIR_LEFT);
-    }
-    if (key_right) {
-        overworld_player_set_dir(&state->player, DIR_RIGHT);
-    }
+    if (show_dialog) {
+        // control dialog
+        if (IsKeyPressed(KEY_UP))
+            conversation_prev_choice(&state->convo);
+        else if (IsKeyPressed(KEY_DOWN))
+            conversation_next_choice(&state->convo);
+        else if (IsKeyPressed(KEY_ENTER) || IsKeyPressed(KEY_KP_ENTER))
+            show_dialog = conversation_continue(&state->convo);
 
-    if ( !key_up && !key_down && !key_left && !key_right )
-        overworld_player_stop_moving(&state->player);
+    } else {
+        // control player
+        bool key_up = IsKeyDown(KEY_UP);
+        bool key_down = IsKeyDown(KEY_DOWN);
+        bool key_left = IsKeyDown(KEY_LEFT);
+        bool key_right = IsKeyDown(KEY_RIGHT);
+        const float pan_speed = state->player.walk_speed;
+        if (key_up) {
+            overworld_player_set_dir(&state->player, DIR_UP);
+        }
+        if (key_down) {
+            overworld_player_set_dir(&state->player, DIR_DOWN);
+        }
+        if (key_left) {
+            overworld_player_set_dir(&state->player, DIR_LEFT);
+        }
+        if (key_right) {
+            overworld_player_set_dir(&state->player, DIR_RIGHT);
+        }
 
-    overworld_player_move(&state->player);
+        if ( !key_up && !key_down && !key_left && !key_right )
+            overworld_player_stop_moving(&state->player);
 
-    if (IsKeyPressed(KEY_D))
-        show_dialog = !show_dialog;
+        overworld_player_move(&state->player);
 
-    map_offset.x = 300 - state->player.pos.x;
-    map_offset.y = 300 - state->player.pos.y;
+        if (IsKeyPressed(KEY_D))
+            show_dialog = !show_dialog;
+
+        map_offset.x = 300 - state->player.pos.x;
+        map_offset.y = 300 - state->player.pos.y;
+    }
 }
 
 void overworld_npcs_update(NPC *npcs, size_t npcs_sz, Tick tick) {
@@ -147,8 +159,7 @@ void overworld_update(OverworldState *state) {
             .width = 300,
             .height = 300,
         };
-        Dialog dialog = state->convo.dialogs[0];
-        dialog_show(&dialog, dialog_rec);
+        conversation_show(&state->convo, dialog_rec);
     }
 }
 
@@ -209,6 +220,7 @@ void overworld_load(OverworldState *state) {
     overworld_player_load(&state->player);
 
     load_conversation_from_xml(&state->convo, "dialog/test_dialog.xml");
+    state->convo.curr_dialog = &state->convo.dialogs[0];
     conversation_print(&state->convo);
 }
 

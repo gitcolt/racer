@@ -123,6 +123,7 @@ static void parse_node_choice_text(Conversation *convo,
 static void parse_node_choice_next(Conversation *convo,
                                    const char *content_start,
                                    size_t content_len) {
+    printf("PARSE_NODE_CHOICE_NEXSTJK\n");
     char choice_next_str[MAX_TEXT_SZ];
     memcpy(choice_next_str, content_start, content_len);
     choice_next_str[content_len] = '\0';
@@ -195,6 +196,9 @@ static void parse(Conversation *convo, const char *buf, sxmltok_t *toks, size_t 
             } else if (NODE_MATCH_START(NODE_CHOICE_TEXT)) {
                 SET_START_AND_LEN(NODE_CHOICE_TEXT);
                 parse_node_choice_text(convo, content_start, content_len);
+            } else if (NODE_MATCH_START(NODE_CHOICE_NEXT)) {
+                SET_START_AND_LEN(NODE_CHOICE_NEXT);
+                parse_node_choice_next(convo, content_start, content_len);
             } else if (NODE_MATCH_START(NODE_CHOICE)) {
                 SET_START_AND_LEN(NODE_CHOICE);
                 parse_node_choice(convo);
@@ -288,7 +292,7 @@ void dialog_validate(Dialog *dialog) {
 
 void choice_print(Choice *choice) {
     printf("\t\t\ttext: %s\n", choice->text);
-    printf("\t\t\tnext: \"%s\"\n", choice->next);
+    printf("\t\t\tnext: %s\n", choice->next);
 }
 
 void dialog_print(Dialog *dialog) {
