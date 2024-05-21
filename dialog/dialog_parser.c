@@ -15,7 +15,7 @@ static void parse_node_hl(char parent_str[]) {
 static void parse_node_var(Conversation *convo, char parent_str[]) {
     char *start = strstr(parent_str, "<" NODE_VAR);
 
-    Var *var = &convo->vars[convo->num_vars];
+    DialogVar *var = &convo->vars[convo->num_vars];
 
     const char *attr = start + strlen("<" NODE_VAR);
     if (*attr == ' ') {

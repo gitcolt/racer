@@ -28,6 +28,7 @@ typedef struct Dialog {
     char action[MAX_NODE_CONTENT_SZ];
 } Dialog;
 
+// TODO: Get rid of this enum
 enum VarType {
     VAR_TYPE_NUM,
     VAR_TYPE_STR,
@@ -37,19 +38,19 @@ typedef struct {
     char id[MAX_VAR_ID];
     char val_str[MAX_VAR_VAL_STR];
     enum VarType type;
-} Var;
+} DialogVar;
 
 typedef struct {
     char id[MAX_NODE_CONTENT_SZ];
     size_t num_dialogs;
     Dialog dialogs[MAX_CONVERSATION_DIALOGS_SZ];
-    Var vars[MAX_VARS_SZ];
+    DialogVar vars[MAX_VARS_SZ];
     size_t num_vars;
 } Conversation;
 
 void dialog_init(Dialog *dialog);
 void dialog_show(Dialog *dialog, Rectangle rectangle);
-void var_set_int(Var *var, int val);
-void var_set_str(Var *var, const char *val);
+void var_set_int(DialogVar *var, int val);
+void var_set_str(DialogVar *var, const char *val);
 
 #endif

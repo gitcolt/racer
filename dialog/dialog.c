@@ -47,10 +47,10 @@ void dialog_show(Dialog *dialog, Rectangle rec) {
     }
 }
 
-void var_set_int(Var *var, int val) {
+void var_set_int(DialogVar *var, int val) {
     sprintf(var->val_str, "%d", val);
 }
 
-void var_set_str(Var *var, const char *val) {
+void var_set_str(DialogVar *var, const char *val) {
     strcpy(var->val_str, val);
 }
