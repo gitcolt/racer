@@ -22,7 +22,7 @@ void npc_update(NPC *npc, Tick tick) {
     animator_update(&npc->animator, tick);
 }
 
-void npc_load(NPC *npc, V2 tile_pos, const char *identifier) {
+void npc_load(NPC *npc, V2 tile_pos, const char *identifier, Conversation *convo) {
     npc->name = identifier;
     npc->pos = v2_mul_scalar(tile_pos, DST_TILE_SIZE);
     npc->dir = (V2){0, 0};
@@ -31,6 +31,7 @@ void npc_load(NPC *npc, V2 tile_pos, const char *identifier) {
         .radius = NPC_COLLISION_RADIUS,
     };
     create_overworld_npc_animator(&npc->animator, &npc->spritesheet);
+    npc->convo = convo;
 }
 
 void npc_unload(NPC *npc) {

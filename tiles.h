@@ -14,8 +14,6 @@ typedef struct {
     Texture2D tilemap_tex;
 } TileData;
 
-void load_tiles();
-void free_tiles();
 void draw_tiles(TileData *tile_data, V2 offset);
 void draw_grid(V2 offset);
 

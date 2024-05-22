@@ -29,4 +29,12 @@
             </dialog>
         </dialogs>
     </conversation>
+    <conversation>
+        <conversation_id>shop_sign</conversation_id>
+            <dialog>
+                <dialog_id>start</dialog_id>
+                <dialog_text>Bobo's Item Shop</dialog_text>
+                <dialog_next>end</dialog_next>
+            </dialog>
+    </conversation>
 </Root>

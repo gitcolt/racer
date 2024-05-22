@@ -11,7 +11,6 @@ MODULE_SRCS = module.c \
 			  kart.c \
 			  spritesheet.c \
 			  tiles.c \
-			  $(LIBCLDTK) \
 			  shared.c \
 			  collision.c \
 			  xml.c \
@@ -23,15 +22,16 @@ MODULE_SRCS = module.c \
 			  dialog/text.c \
 			  overworld/npc.c \
 			  overworld/overworld.c \
-			  overworld/overworld_player.c
+			  overworld/overworld_player.c \
+			  $(LIBCLDTK)
 
-main: main.c module raylib cLDtk
-	$(CC) $(LIBS) $(LDFLAGS) $(INCLUDES) -g -o $@ $< track_editor.c mymath.c debug.c $(LIBRAYLIB)
+main: main.c module raylib
+	@$(CC) $(LIBS) $(LDFLAGS) $(INCLUDES) -g -o $@ $< track_editor.c mymath.c debug.c $(LIBRAYLIB)
 
 .PHONY: module
 module: libmodule.so
-libmodule.so: $(MODULE_SRCS)
-	$(CC) $(LIBS) $(LDFLAGS) $(INCLUDES) -g -fPIC -shared -o $@ $^
+libmodule.so: $(MODULE_SRCS) $(LIBCLDTK)
+	@$(CC) $(LIBS) $(LDFLAGS) $(INCLUDES) -g -fPIC -shared -o $@ $^
 
 .PHONY: raylib
 raylib: $(LIBRAYLIB)
@@ -39,15 +39,15 @@ $(LIBRAYLIB):
 	make PLATFORM=PLATFORM_DESKTOP -C ./raylib-5.0/src
 
 ./cLDtk/cLDtk.o: ./cLDtk/cLDtk.c
-	$(CC) -g -c -fPIC -o $@ $^ -std=c99
+	@$(CC) -g -c -fPIC -o $@ $^ -std=c99
 
 ./cLDtk/parson.o: ./cLDtk/parson.c
-	$(CC) -g -c -fPIC -o $@ $^ -std=c99
+	@$(CC) -g -c -fPIC -o $@ $^ -std=c99
 
 .PHONY: cLDtk
 cLDtk: $(LIBCLDTK)
 $(LIBCLDTK): ./cLDtk/cLDtk.o ./cLDtk/parson.o
-	ar rvs $(LIBCLDTK) ./cLDtk/cLDtk.o ./cLDtk/parson.o
+	@ar rvs $(LIBCLDTK) ./cLDtk/cLDtk.o ./cLDtk/parson.o
 
 test_math: test/test_math.c
 	$(CC) $(INCLUDES) -g -o $@ $^ -lm

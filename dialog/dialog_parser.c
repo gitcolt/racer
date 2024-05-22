@@ -18,7 +18,7 @@ static void parse_node_var(Conversation *convo, char parent_str[]) {
     DialogVar *var = &convo->vars[convo->num_vars];
 
     const char *attr = start + strlen("<" NODE_VAR);
-    if (*attr == ' ') {
+    if (attr && *attr == ' ') {
         static char attr_buf[99];
         static char attr_key_buf[99];
         static char attr_val_buf[99];
@@ -70,32 +70,34 @@ static void parse_node_var(Conversation *convo, char parent_str[]) {
     ++convo->num_vars;
 }
 
+static void copy_str_contents(char *dst, const char *content_start, size_t content_len) {
+    char buf[MAX_TEXT_SZ];
+    memcpy(buf, content_start, content_len);
+    buf[content_len] = '\0';
+    strcpy(dst, buf);
+}
+
 static void parse_node_dialog_text(Conversation *convo,
                                    const char *content_start,
                                    size_t content_len) {
-    char dialog_text_str[MAX_TEXT_SZ];
-    memcpy(dialog_text_str, content_start, content_len);
-    dialog_text_str[content_len] = '\0';
-
-    strcpy(convo->dialogs[convo->num_dialogs].text, dialog_text_str);
+    copy_str_contents(convo->dialogs[convo->num_dialogs].text, content_start, content_len);
 }
 
 static void parse_node_dialog_next(Conversation *convo,
                                    const char *content_start,
                                    size_t content_len) {
-    char dialog_next_str[MAX_TEXT_SZ];
-    memcpy(dialog_next_str, content_start, content_len);
-    dialog_next_str[content_len] = '\0';
-    strcpy(convo->dialogs[convo->num_dialogs].next, dialog_next_str);
+    copy_str_contents(convo->dialogs[convo->num_dialogs].next, content_start, content_len);
 }
 
 static void parse_node_dialog_action(Conversation *convo,
                                      const char *content_start,
                                      size_t content_len) {
-    char dialog_action_str[MAX_TEXT_SZ];
-    memcpy(dialog_action_str, content_start, content_len);
-    dialog_action_str[content_len] = '\0';
-    strcpy(convo->dialogs[convo->num_dialogs].action, dialog_action_str);
+    copy_str_contents(convo->dialogs[convo->num_dialogs].action,
+                      content_start, content_len);
+}
+
+static void parse_node_conversation(Conversation *convo) {
+    conversation_init(convo);
 }
 
 static void parse_node_dialog(Conversation *convo) {
@@ -112,43 +114,29 @@ static void parse_node_choice(Conversation *convo) {
 static void parse_node_choice_text(Conversation *convo,
                                    const char *content_start,
                                    size_t content_len) {
-    char choice_text_str[MAX_TEXT_SZ];
-    memcpy(choice_text_str, content_start, content_len);
-    choice_text_str[content_len] = '\0';
     Dialog *dialog = &convo->dialogs[convo->num_dialogs];
     Choice *choice = &dialog->choices[dialog->num_choices];
-    strcpy(choice->text, choice_text_str);
+    copy_str_contents(choice->text, content_start, content_len);
 }
 
 static void parse_node_choice_next(Conversation *convo,
                                    const char *content_start,
                                    size_t content_len) {
-    printf("PARSE_NODE_CHOICE_NEXSTJK\n");
-    char choice_next_str[MAX_TEXT_SZ];
-    memcpy(choice_next_str, content_start, content_len);
-    choice_next_str[content_len] = '\0';
     Dialog *dialog = &convo->dialogs[convo->num_dialogs];
     Choice *choice = &dialog->choices[dialog->num_choices];
-    printf("choice_next_str: %s\n", choice_next_str);
-    strcpy(choice->next, choice_next_str);
+    copy_str_contents(choice->next, content_start, content_len);
 }
 
 static void parse_node_dialog_id(Conversation *convo,
                                  const char *content_start,
                                  size_t content_len) {
-    char dialog_id_str[MAX_TEXT_SZ];
-    memcpy(dialog_id_str, content_start, content_len);
-    dialog_id_str[content_len] = '\0';
-    strcpy(convo->dialogs[convo->num_dialogs].id, dialog_id_str);
+    copy_str_contents(convo->dialogs[convo->num_dialogs].id, content_start, content_len);
 }
 
 static void parse_node_conversation_id(Conversation *convo,
                                        const char *content_start,
                                        size_t content_len) {
-    char conversation_id_str[MAX_TEXT_SZ];
-    memcpy(conversation_id_str, content_start, content_len);
-    conversation_id_str[content_len] = '\0';
-    strcpy(convo->id, conversation_id_str);
+    copy_str_contents(convo->id, content_start, content_len);
 }
 
 #define PARENT_NODE_MATCH(node_name) \
@@ -158,14 +146,18 @@ static void parse_node_conversation_id(Conversation *convo,
         !memcmp(buf + parent_tok->startpos, node_name " ", strlen(node_name) + 1) \
     )
 
-static void parse(Conversation *convo, const char *buf, sxmltok_t *toks, size_t num_tokens) {
+static void parse(Conversations *convos, const char *buf, sxmltok_t *toks, size_t num_tokens) {
+    conversations_init(convos);
+    Conversation *curr_convo = &convos->convos[0];
+    Dialog *curr_dialog = &curr_convo->dialogs[curr_convo->num_dialogs];
+
     for (int i = 0; i < num_tokens; ++i) {
         const sxmltok_t *tok = toks + i; // ..
         if (tok->type == SXML_STARTTAG) {
 
 #define NODE_MATCH_START(node_name) \
-     !memcmp(buf + tok->startpos, node_name ">", strlen(node_name) + 1) || \
-     !memcmp(buf + tok->startpos, node_name " ", strlen(node_name) + 1)
+            !memcmp(buf + tok->startpos, node_name ">", strlen(node_name) + 1) || \
+            !memcmp(buf + tok->startpos, node_name " ", strlen(node_name) + 1)
 
 #define SET_START_AND_LEN(node_name) \
             do { \
@@ -180,50 +172,49 @@ static void parse(Conversation *convo, const char *buf, sxmltok_t *toks, size_t 
             sxmltok_t *parent_tok;
 
             if (NODE_MATCH_START(NODE_CONVERSATION)) {
-                // printf("content_len (convo): %zu\n", content_len);
+                parse_node_conversation(curr_convo);
             } else if (NODE_MATCH_START(NODE_CONVERSATION_ID)) {
                 SET_START_AND_LEN(NODE_CONVERSATION_ID);
-                parse_node_conversation_id(convo, content_start, content_len);
+                parse_node_conversation_id(curr_convo, content_start, content_len);
             } else if (NODE_MATCH_START(NODE_DIALOG)) {
                 SET_START_AND_LEN(NODE_DIALOG);
-                parse_node_dialog(convo);
+                parse_node_dialog(curr_convo);
             } else if (NODE_MATCH_START(NODE_DIALOG_ID)) {
                 SET_START_AND_LEN(NODE_DIALOG_ID);
-                parse_node_dialog_id(convo, content_start, content_len);
+                parse_node_dialog_id(curr_convo, content_start, content_len);
             } else if (NODE_MATCH_START(NODE_DIALOG_TEXT)) {
                 SET_START_AND_LEN(NODE_DIALOG_TEXT);
-                parse_node_dialog_text(convo, content_start, content_len);
+                parse_node_dialog_text(curr_convo, content_start, content_len);
             } else if (NODE_MATCH_START(NODE_CHOICE_TEXT)) {
                 SET_START_AND_LEN(NODE_CHOICE_TEXT);
-                parse_node_choice_text(convo, content_start, content_len);
+                parse_node_choice_text(curr_convo, content_start, content_len);
             } else if (NODE_MATCH_START(NODE_CHOICE_NEXT)) {
                 SET_START_AND_LEN(NODE_CHOICE_NEXT);
-                parse_node_choice_next(convo, content_start, content_len);
+                parse_node_choice_next(curr_convo, content_start, content_len);
             } else if (NODE_MATCH_START(NODE_CHOICE)) {
                 SET_START_AND_LEN(NODE_CHOICE);
-                parse_node_choice(convo);
+                parse_node_choice(curr_convo);
             } else if (NODE_MATCH_START(NODE_DIALOG_NEXT)) {
                 SET_START_AND_LEN(NODE_DIALOG_NEXT);
-                parse_node_dialog_next(convo, content_start, content_len);
+                parse_node_dialog_next(curr_convo, content_start, content_len);
             } else if (NODE_MATCH_START(NODE_CHOICE_NEXT)) {
                 // 
             } else if (NODE_MATCH_START(NODE_DIALOG_ACTION)) {
                 SET_START_AND_LEN(NODE_DIALOG_ACTION);
-                parse_node_dialog_action(convo, content_start, content_len);
+                parse_node_dialog_action(curr_convo, content_start, content_len);
             } else if (NODE_MATCH_START(NODE_VAR)) {
-                Dialog *dialog = &convo->dialogs[convo->num_dialogs];
                 if (PARENT_NODE_MATCH(NODE_DIALOG_TEXT)) {
-                    parse_node_var(convo, dialog->text);
+                    parse_node_var(curr_convo, curr_dialog->text);
                 } else if (PARENT_NODE_MATCH(NODE_CHOICE_TEXT)) {
-                    parse_node_var(convo, dialog->choices[dialog->num_choices].text);
+                    parse_node_var(curr_convo,
+                                   curr_dialog->choices[curr_dialog->num_choices].text);
                 } else
                     printf("??\n");
             } else if (NODE_MATCH_START(NODE_HL)) {
-                Dialog *dialog = &convo->dialogs[convo->num_dialogs];
                 if (PARENT_NODE_MATCH(NODE_DIALOG_TEXT)) {
-                    parse_node_hl(dialog->text);
+                    parse_node_hl(curr_dialog->text);
                 } else if (PARENT_NODE_MATCH(NODE_CHOICE_TEXT)) {
-                    parse_node_hl(dialog->choices[dialog->num_choices].text);
+                    parse_node_hl(curr_dialog->choices[curr_dialog->num_choices].text);
                 } else
                     printf("??\n");
             }
@@ -232,17 +223,21 @@ static void parse(Conversation *convo, const char *buf, sxmltok_t *toks, size_t 
 #define NODE_MATCH_END(node_name) \
      !memcmp(buf + tok->startpos - 1, "/" node_name ">", strlen(node_name) + 2)
 
-            if (NODE_MATCH_END(NODE_DIALOG))
-                ++convo->num_dialogs;
+            if (NODE_MATCH_END(NODE_CONVERSATION)) {
+                curr_convo->curr_dialog = get_dialog_by_id(curr_convo, "start");
+                curr_convo = &convos->convos[++convos->num_convos];
+            }
+            else if (NODE_MATCH_END(NODE_DIALOG))
+                curr_dialog = &curr_convo->dialogs[++curr_convo->num_dialogs];
             else if (NODE_MATCH_END(NODE_CHOICE))
-                ++convo->dialogs[convo->num_dialogs].num_choices;
+                ++curr_dialog->num_choices;
         } else {
             // ???
         }
     }
 }
 
-void load_conversation_from_xml(Conversation *convo, const char *filename) {
+void load_conversations_from_xml(Conversations *convos, const char *filename) {
     FILE *f = fopen(filename, "r");
     if (!f) {
         fprintf(stderr, "Failed to open file '%s'\n", filename);
@@ -278,12 +273,17 @@ void load_conversation_from_xml(Conversation *convo, const char *filename) {
         //     default:
         //         fprintf(stderr, "Unknown error code '%d'\n", err);
         // }
-        parse(convo, buf, toks, parser.ntokens);
+        parse(convos, buf, toks, parser.ntokens);
     }
 }
 
 void unload_conversation(Conversation *convo) {
     memset(convo, 0, sizeof(*convo));
+}
+
+void unload_conversations(Conversations *convos) {
+    for (size_t i = 0; i < convos->num_convos; ++i)
+        unload_conversation(&convos->convos[i]);
 }
 
 void dialog_validate(Dialog *dialog) {
@@ -319,11 +319,17 @@ void conversation_print(Conversation *convo) {
     }
     printf("VARS:\n");
     for (int i = 0; i < convo->num_vars; ++i) {
-        printf("id: %s\n", convo->vars[i].id);
+        printf("\tid: %s\n", convo->vars[i].id);
         // printf("type: %s\n",
         //         convo->vars[i].type == VAR_TYPE_STR ? "STR"
         //         : convo->vars[i].type == VAR_TYPE_NUM ? "NUM"
         //         : "???");
-        printf("val: \"%s\"\n", convo->vars[i].val_str);
+        printf("\tval: \"%s\"\n", convo->vars[i].val_str);
     }
+}
+
+void conversations_print(Conversations *convos) {
+    printf("convos->num_convos: %zu\n", convos->num_convos);
+    for (size_t i = 0; i < convos->num_convos; ++i)
+        conversation_print(&convos->convos[i]);
 }

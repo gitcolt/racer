@@ -5,6 +5,7 @@
 #include "dialog.h"
 
 // Node names
+#define NODE_CONVERSATIONS "conversations"
 #define NODE_CONVERSATION "conversation"
 #define NODE_CONVERSATION_ID "conversation_id"
 #define NODE_DIALOGS "dialogs"
@@ -22,13 +23,15 @@
 #define NODE_VAR "var"
 #define NODE_HL "hl"
 
-void load_conversation_from_xml(Conversation *convo, const char *filename);
+void load_conversations_from_xml(Conversations *convos, const char *filename);
 void unload_conversation(Conversation *convo);
+void unload_conversations(Conversations *convo);
 void dialogs_parse_xml(Conversation *dialogs,
                        const char *buf,
                        sxmltok_t *toks,
                        size_t num_toks);
 void dialog_validate(Dialog *dialog);
+void conversations_print(Conversations *convos);
 void conversation_print(Conversation *convo);
 void dialog_print(Dialog *dialog);
 

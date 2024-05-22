@@ -38,16 +38,6 @@ void draw_tiles(TileData *tile_data, V2 offset) {
     }
 }
 
-void load_tiles() {
-    const char *map_data_filename = "LDtk_files/overworld.ldtk";
-    loadJSONFile("{\"jsonVersion\":\"\"}", (char *)map_data_filename);
-    importMapData();
-}
-
-void free_tiles() {
-    freeMapData();
-}
-
 void draw_grid(V2 offset) {
     float thickness = 1;
     V2 start;

@@ -50,6 +50,17 @@ typedef struct {
     Dialog *curr_dialog;
 } Conversation;
 
+#define MAX_CONVERSATIONS 10
+
+typedef struct {
+    Conversation convos[MAX_CONVERSATIONS];
+    size_t num_convos;
+} Conversations;
+
+void conversations_init(Conversations *convos);
+void conversation_init(Conversation *convo);
+Conversation *get_convo_by_id(Conversations *convo, const char *convo_id);
+Dialog *get_dialog_by_id(Conversation *convo, const char *dialog_id);
 void dialog_init(Dialog *dialog);
 void dialog_show(Dialog *dialog, Rectangle rectangle);
 void var_set_int(DialogVar *var, int val);

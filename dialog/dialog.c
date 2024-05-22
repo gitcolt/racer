@@ -10,6 +10,30 @@
 static const float border_size = 15;
 static const float text_margin = 20;
 
+Conversation *get_convo_by_id(Conversations *convos, const char *convo_id) {
+    for (int i = 0; i < convos->num_convos; ++i) {
+        if (!strcmp(convo_id, convos->convos[i].id))
+            return &convos->convos[i];
+    }
+    return NULL;
+}
+
+void conversations_init(Conversations *convos) {
+    memset(convos, 0, sizeof(*convos));
+}
+
+void conversation_init(Conversation *convo) {
+    memset(convo, 0, sizeof(*convo));
+}
+
+Dialog *get_dialog_by_id(Conversation *convo, const char *dialog_id) {
+    for (int i = 0; i < convo->num_dialogs; ++i) {
+        if (!strcmp(dialog_id, convo->dialogs[i].id))
+            return &convo->dialogs[i];
+    }
+    return NULL;
+}
+
 void dialog_init(Dialog *dialog) {
     ZERO_MEM(dialog);
     memset(dialog, 0, sizeof(*dialog));
@@ -63,10 +87,7 @@ void dialog_prev_choice(Dialog *dialog) {
 }
 
 Choice *dialog_choose_selected_choice(Dialog *dialog) {
-    Choice *choice = &dialog->choices[dialog->selected_choice_idx];
-    printf("Chose '%s'\n", choice->text);
-    printf("Next: '%s'\n", choice->next);
-    return choice;
+    return &dialog->choices[dialog->selected_choice_idx];
 }
 
 void var_set_int(DialogVar *var, int val) {
@@ -75,14 +96,6 @@ void var_set_int(DialogVar *var, int val) {
 
 void var_set_str(DialogVar *var, const char *val) {
     strcpy(var->val_str, val);
-}
-
-static Dialog *get_dialog_with_id(Conversation *convo, const char *dialog_id) {
-    for (int i = 0; i < convo->num_dialogs; ++i) {
-        if (!strcmp(dialog_id, convo->dialogs[i].id))
-            return &convo->dialogs[i];
-    }
-    return NULL;
 }
 
 // returns true if there is a next dialog, false otherwise
@@ -95,11 +108,11 @@ bool conversation_continue(Conversation *convo) {
         next_dialog_id = convo->curr_dialog->next;
 
     if (!strcmp(next_dialog_id, "end")) {
-        convo->curr_dialog = get_dialog_with_id(convo, "start");
+        convo->curr_dialog = get_dialog_by_id(convo, "start");
         return false;
     }
 
-    Dialog *next_dialog = get_dialog_with_id(convo, next_dialog_id);
+    Dialog *next_dialog = get_dialog_by_id(convo, next_dialog_id);
     if (next_dialog) {
         convo->curr_dialog = next_dialog;
         return true;

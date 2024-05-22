@@ -19,8 +19,8 @@ typedef struct {
     OverworldPlayer player;
     BoxCollider *colliders;
     NPC *npcs;
-    size_t npcs_sz;
-    Conversation convo;
+    size_t num_npcs;
+    Conversations convos;
 } OverworldState;
 
 #endif
