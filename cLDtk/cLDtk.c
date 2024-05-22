@@ -263,10 +263,11 @@ void importLevelsData(void){
                     levels_layerInstances_entityInstances_fieldInstances =json_object_get_array( json_array_get_object(levels_layerInstances_entityInstances, y), "fieldInstances");
                     
                     
-                    if(json_array_get_count(levels_layerInstances_entityInstances_fieldInstances) != 0){
+                    size_t field_instances_arr_len = json_array_get_count(levels_layerInstances_entityInstances_fieldInstances);
+                    // if(field_instances_arr_len != 0){
                         
-                        levels_data_ptr->levels_data_ptr[i].layers_data_ptr[g].entityInstances_data_ptr[y].fieldInstanceCount = json_array_get_count(levels_layerInstances_entityInstances_fieldInstances);
-                    }
+                        levels_data_ptr->levels_data_ptr[i].layers_data_ptr[g].entityInstances_data_ptr[y].fieldInstanceCount = field_instances_arr_len;
+                    // }
                     
                     
                     levels_data_ptr->levels_data_ptr[i].layers_data_ptr[g].entityInstances_data_ptr[y].fieldInstances_data_ptr = malloc(sizeof(struct fieldInstances) * json_array_get_count(levels_layerInstances_entityInstances_fieldInstances));
