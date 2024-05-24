@@ -9,6 +9,7 @@ static void initialize_animations(Kart *kart, Spritesheet spritesheet) {
     // animator_add_anim_spec(&kart->animator, (FrameSpec){ ANIM_ID_TURN_RIGHT, 1, 17, 5, 0 });
 
     animator_set_anim(&kart->animator, ANIM_ID_TURN_LEFT);
+    animator_set_anim_mode(&kart->animator, ANIM_MODE_LOOP);
 }
 
 void kart_init(Kart *kart) {

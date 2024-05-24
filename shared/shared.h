@@ -36,4 +36,6 @@ typedef struct xml_document XmlDocument;
 
 #define ZERO_MEM(ptr) memset(ptr, 0, sizeof(*(ptr)))
 
+void draw_textured_quad(Texture2D tex, V2 center);
+
 #endif

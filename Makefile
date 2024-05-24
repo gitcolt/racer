@@ -23,6 +23,7 @@ MODULE_SRCS = module.c \
 			  overworld/npc.c \
 			  overworld/overworld.c \
 			  overworld/overworld_player.c \
+			  race/race.c \
 			  $(LIBCLDTK)
 
 main: main.c module raylib

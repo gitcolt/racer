@@ -266,28 +266,6 @@ void node_move(Node *node, V2 pos) {
     node->ctl_pts[1] = v2_add(node->ctl_pts[1], delta);
 }
 
-void draw_textured_quad(Texture2D tex, V2 center) {
-    rlSetTexture(tex.id);
-    rlBegin(RL_QUADS);
-        rlColor4ub(255, 255, 255, 255);
-        // rlNormal3f(0, 0, 1.0);
-
-        rlTexCoord2f(0, 0);
-        rlVertex3f(center.x - 10, 0, center.y - 10);
-
-        rlTexCoord2f(1, 0);
-        rlVertex3f(center.x - 10, 0, center.y + 10);
-
-        rlTexCoord2f(1, 1);
-        rlVertex3f(center.x + 10, 0, center.y + 10);
-
-        rlTexCoord2f(0, 1);
-        rlVertex3f(center.x + 10, 0, center.y - 10);
-
-    rlEnd();
-    rlSetTexture(0);
-}
-
 void start_node_el_drag(NodeElement node_el) {
     grabbed_node_el = node_el;
 }

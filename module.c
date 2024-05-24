@@ -2,6 +2,7 @@
 #include "hr.h"
 #include "state/state.h"
 #include "overworld/overworld.h"
+#include "race/race.h"
 #include "shared/dyn_arr.h"
 
 #include "raylib.h"
@@ -10,15 +11,6 @@
 #include <stdio.h>
 #include <math.h>
 #include <string.h>
-
-static Camera3D cam = {
-    .position = {5.f, 2.f, 5.f},
-    .target = {0.0f, 0.0f, 0.0f},
-    .up = {0.0f, 1.0f, 0.0f},
-    .fovy = 45.0f,
-    .projection = CAMERA_PERSPECTIVE,
-};
-static Texture2D track_tex;
 
 #if 0
 void process_input(State *state) {
@@ -77,56 +69,35 @@ void process_input(State *state) {
 //     }
 // }
 
-#if 0
-void draw_stuff(State *state) {
-    state->player_kart.pos = mouse_pos;
-    kart_draw(&state->player_kart);
+void on_unload(void *ctx);
+void on_load(void *ctx);
 
-    DrawFPS(700, 0);
+static void toggle_mode(State *state) {
+    on_unload(state);
+    state->game_mode = state->game_mode == GAME_MODE_OVERWORLD
+        ? GAME_MODE_RACING
+        : GAME_MODE_OVERWORLD;
+    on_load(state);
 }
-#endif
 
-#if 0
-void on_update(void *ctx) {
-    State *state = ctx;
-
-    process_input(state);
-
-    UpdateCamera(&cam, CAMERA_FIRST_PERSON);
-
-    BeginMode3D(cam);
-    draw_textured_quad(track_tex, (V2){0, 0});
-    EndMode3D();
-
-    kart_update(&state->player_kart, state->tick);
-
-    draw_stuff(state);
-
-    ++state->tick;
+static void process_common_input(State *state) {
+    if (IsKeyPressed(KEY_M))
+        toggle_mode(state);
 }
-#endif
-
-#if 0
-void on_load(void *ctx) {
-    State *state = ctx;
-
-    const char *track_tex_filename = "./assets/track.png";
-    track_tex = LoadTexture(track_tex_filename);
-
-    kart_init(&state->player_kart);
-}
-#endif
 
 #if 1
 void on_update(void *ctx) {
     State *state = ctx;
+
+    process_common_input(state);
 
     switch (state->game_mode) {
         case GAME_MODE_EDITOR:
             printf("on_update editor\n");
             break;
         case GAME_MODE_RACING:
-            printf("on_update racing\n");
+            race_update(&state->race_state, state->race_state.tick);
+            ++state->race_state.tick;
             break;
         case GAME_MODE_OVERWORLD:
             overworld_update(&state->overworld_state);
@@ -145,7 +116,7 @@ void on_load(void *ctx) {
             printf("on_load editor\n");
             break;
         case GAME_MODE_RACING:
-            printf("on_load racing\n");
+            race_load(&state->race_state);
             break;
         case GAME_MODE_OVERWORLD:
             overworld_load(&state->overworld_state);
@@ -162,7 +133,7 @@ void on_unload(void *ctx) {
             printf("on_unload editor\n");
             break;
         case GAME_MODE_RACING:
-            printf("on_unload racing\n");
+            // race_unload(&state->race_state);
             break;
         case GAME_MODE_OVERWORLD:
             overworld_unload(&state->overworld_state);
