@@ -1,7 +1,7 @@
 #ifndef KART_H
 #define KART_H
 
-#include "shared.h"
+#include "shared/shared.h"
 #include "animation/animator.h"
 
 typedef struct {

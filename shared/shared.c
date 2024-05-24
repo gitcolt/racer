@@ -1,6 +1,7 @@
 #include "shared.h"
 #include "ctype.h"
-#include "string.h"
+
+#include <string.h>
 
 void draw_circle_lines_thickness(V2 center, float radius, float thickness, Color color) {
     for (int i = 0; i < thickness; ++i)

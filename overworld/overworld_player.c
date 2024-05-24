@@ -1,7 +1,7 @@
 #include "overworld_player.h"
 #include "../tiles.h"
-#include "../mymath.h"
 #include "../animation/animations.h"
+#include "../shared/mymath.h"
 
 #include <stdio.h>
 #include <string.h>

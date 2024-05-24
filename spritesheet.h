@@ -1,7 +1,7 @@
 #ifndef SPRITESHEET_H
 #define SPRITESHEET_H
 
-#include "shared.h"
+#include "shared/shared.h"
 
 #include "raylib.h"
 

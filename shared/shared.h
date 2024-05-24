@@ -8,6 +8,7 @@
 #define SCREEN_WIDTH 800
 #define SCREEN_HEIGHT 600
 #define WIN_POS_X 3000
+// #define WIN_POS_X 300
 #define WIN_POS_Y 0
 
 #define ARRLEN(arr) \

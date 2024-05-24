@@ -1,10 +1,10 @@
 #ifndef OVERWORLD_PLAYER_H
 #define OVERWORLD_PLAYER_H
 
-#include "../shared.h"
 #include "../spritesheet.h"
 #include "../collision.h"
 #include "../animation/animator.h"
+#include "../shared/shared.h"
 
 #define PLAYER_COLLISION_RADIUS 10
 

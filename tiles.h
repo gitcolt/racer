@@ -1,7 +1,7 @@
 #ifndef TILES_H
 #define TILES_H
 
-#include "shared.h"
+#include "shared/shared.h"
 
 #include "raylib.h"
 #include "cLDtk.h"

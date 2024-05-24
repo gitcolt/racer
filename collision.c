@@ -1,7 +1,7 @@
 #include "collision.h"
-#include "shared.h"
 #include "colors.h"
-#include "mymath.h"
+#include "shared/mymath.h"
+#include "shared/shared.h"
 
 static const float box_collider_thickness = 3;
 static const float circle_collider_thickness = 3;

@@ -1,7 +1,7 @@
 #ifndef TRACK_EDITOR_H
 #define TRACK_EDITOR_H
 
-#include "mymath.h"
+#include "shared/shared.h"
 
 #include <stdlib.h>
 

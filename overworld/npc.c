@@ -1,8 +1,8 @@
 #include "npc.h"
-#include "../dyn_arr.h"
-#include "../mymath.h"
 #include "../tiles.h"
 #include "../animation/animations.h"
+#include "../shared/dyn_arr.h"
+#include "../shared/mymath.h"
 
 #include <malloc.h>
 #include <string.h>

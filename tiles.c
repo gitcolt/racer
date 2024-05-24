@@ -1,6 +1,6 @@
 #include "raylib.h"
 #include "tiles.h"
-#include "shared.h"
+#include "shared/shared.h"
 
 #include <math.h>
 #include <stdio.h>

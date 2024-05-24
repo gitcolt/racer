@@ -4,7 +4,8 @@
 #include "../dialog/dialog.h"
 #include "../dialog/dialog_parser.h"
 #include "../collision.h"
-#include "../dyn_arr.h"
+#include "../shared/dyn_arr.h"
+#include "../shared/q.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -14,6 +15,7 @@ static V2 map_offset = { 0, 0 };
 static bool show_dialog = false;
 static bool hit = true;
 static Conversation *curr_convo;
+static Q npc_collision_q;
 
 typedef struct {
     V2 s;
@@ -52,7 +54,7 @@ void player_collide(OverworldPlayer *player, BoxCollider collider) {
     }
 }
 
-void overworld_process_collisions(BoxCollider *colliders, size_t colliders_size, OverworldPlayer *player) {
+void overworld_process_tile_collisions(BoxCollider *colliders, size_t colliders_size, OverworldPlayer *player) {
     for (size_t i = 0; i < colliders_size; ++i) {
         BoxCollider bc = colliders[i];
         hit = CheckCollisionCircleRec(player->pos, PLAYER_COLLISION_RADIUS, bc.rec);
@@ -150,13 +152,25 @@ void overworld_npcs_update(NPC *npcs, size_t num_npcs, Tick tick) {
         npc_update(&npcs[i], tick);
 }
 
+void overworld_process_entity_collisions(OverworldState *state) {
+    for (size_t i = 0; i < state->num_npcs; ++i) {
+        NPC *npc = &state->npcs[i];
+        if (CheckCollisionCircles(npc->collider.center,
+                                  npc->collider.radius,
+                                  state->player.collider.center,
+                                  state->player.collider.radius))
+            printf("Collision!!!!!!!!\n");
+    }
+}
+
 void overworld_update(OverworldState *state) {
     overworld_process_input(state);
     overworld_player_update(&state->player, state->tick);
     overworld_npcs_update(state->npcs, state->num_npcs, state->tick);
-    overworld_process_collisions(state->colliders,
-                                 ARR_LEN(state->colliders),
-                                 &state->player);
+    overworld_process_tile_collisions(state->colliders,
+                                      ARR_LEN(state->colliders),
+                                      &state->player);
+    overworld_process_entity_collisions(state);
     overworld_draw(state);
 
     if (show_dialog) {

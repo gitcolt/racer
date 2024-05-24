@@ -1,6 +1,6 @@
 #include "animator.h"
-#include "../dyn_arr.h"
 #include "../debug.h"
+#include "../shared/dyn_arr.h"
 
 #include <stdio.h>
 

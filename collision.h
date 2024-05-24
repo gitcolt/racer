@@ -1,7 +1,7 @@
 #ifndef COLLISION_H
 #define COLLISION_H
 
-#include "shared.h"
+#include "shared/shared.h"
 
 #include "raylib.h"
 

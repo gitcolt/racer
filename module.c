@@ -1,8 +1,8 @@
 #include "track_editor.h"
 #include "hr.h"
-#include "dyn_arr.h"
 #include "state/state.h"
 #include "overworld/overworld.h"
+#include "shared/dyn_arr.h"
 
 #include "raylib.h"
 #include "raylib-5.0/src/rlgl.h"

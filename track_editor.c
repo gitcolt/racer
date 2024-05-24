@@ -1,8 +1,8 @@
 #include "track_editor.h"
 #include "colors.h"
-#include "mymath.h"
 #define DYN_ARR_IMPL
-#include "dyn_arr.h"
+#include "shared/dyn_arr.h"
+#include "shared/mymath.h"
 
 #include "rlgl.h"
 

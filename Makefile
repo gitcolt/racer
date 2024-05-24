@@ -6,15 +6,15 @@ LIBS = -lm
 
 MODULE_SRCS = module.c \
 			  track_editor.c \
-			  mymath.c \
 			  debug.c \
 			  kart.c \
 			  spritesheet.c \
 			  tiles.c \
-			  shared.c \
 			  collision.c \
 			  xml.c \
 			  sxml.c \
+			  shared/mymath.c \
+			  shared/shared.c \
 			  animation/animator.c \
 			  animation/animations.c \
 			  dialog/dialog.c \
@@ -26,7 +26,7 @@ MODULE_SRCS = module.c \
 			  $(LIBCLDTK)
 
 main: main.c module raylib
-	@$(CC) $(LIBS) $(LDFLAGS) $(INCLUDES) -g -o $@ $< track_editor.c mymath.c debug.c $(LIBRAYLIB)
+	@$(CC) $(LIBS) $(LDFLAGS) $(INCLUDES) -g -o $@ $< track_editor.c shared/mymath.c debug.c $(LIBRAYLIB)
 
 .PHONY: module
 module: libmodule.so
