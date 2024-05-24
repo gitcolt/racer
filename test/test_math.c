@@ -1,4 +1,4 @@
-#include "../mymath.c"
+#include "../shared/mymath.c"
 
 #include "minunit.h"
 
