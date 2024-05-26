@@ -1,17 +1,16 @@
 #define HR_DRIVER
 #include "hr.h"
-#include "colors.h"
+#include "shared/colors.h"
 #include "state/state.h"
 
 #include "raylib.h"
 
-#define INITIAL_GAME_MODE GAME_MODE_OVERWORLD
+#define INITIAL_GAME_MODE GAME_MODE_EDITOR
 
 int main() {
     State state = {
         .game_mode = INITIAL_GAME_MODE,
     };
-    // track_init(&state.editor_state.track);
     HR_CTX(state);
     SetTraceLogLevel(LOG_ERROR);
     InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, ":)");

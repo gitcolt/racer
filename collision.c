@@ -1,5 +1,5 @@
 #include "collision.h"
-#include "colors.h"
+#include "shared/colors.h"
 #include "shared/mymath.h"
 #include "shared/shared.h"
 

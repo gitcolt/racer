@@ -5,7 +5,6 @@ LIBCLDTK = ./cLDtk/libcLDtk.a
 LIBS = -lm
 
 MODULE_SRCS = module.c \
-			  track_editor.c \
 			  debug.c \
 			  kart.c \
 			  spritesheet.c \
@@ -23,11 +22,12 @@ MODULE_SRCS = module.c \
 			  overworld/npc.c \
 			  overworld/overworld.c \
 			  overworld/overworld_player.c \
+			  track_editor/track_editor.c \
 			  race/race.c \
 			  $(LIBCLDTK)
 
 main: main.c module raylib
-	@$(CC) $(LIBS) $(LDFLAGS) $(INCLUDES) -g -o $@ $< track_editor.c shared/mymath.c debug.c $(LIBRAYLIB)
+	@$(CC) $(LIBS) $(LDFLAGS) $(INCLUDES) -g -o $@ $< shared/mymath.c debug.c $(LIBRAYLIB)
 
 .PHONY: module
 module: libmodule.so
